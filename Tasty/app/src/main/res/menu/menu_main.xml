@@ -3,8 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.tasty.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/filter_option_restaurant"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/filter_option_restaurant"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/filter_option_money"
+        android:orderInCategory="100"
+        android:title="@string/filter_option_money"
         app:showAsAction="never" />
 </menu>

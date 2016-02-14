@@ -38,9 +38,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.filter_option_restaurant) {
+            //TODO: When user filter by restaurant
+            return true;
+        }else if(id == R.id.filter_option_money){
+            //TODO: When user filter by money
             return true;
         }
+
 
         return super.onOptionsItemSelected(item);
     }
