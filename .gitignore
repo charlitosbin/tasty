@@ -30,3 +30,6 @@ proguard/
 
 # Android Studio captures folder
 captures/
+Tasty/.idea/encodings.xml
+Tasty/.idea/gradle.xml
+Tasty/.idea/misc.xml
