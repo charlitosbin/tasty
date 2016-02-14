@@ -1,11 +1,15 @@
 package com.example.tasty;
 
 import android.Manifest;
+import android.app.SearchManager;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
+import android.support.v7.widget.SearchView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -17,6 +21,7 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap googleMap;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        searchView.setQueryHint(getResources().getString(R.string.search_by_food));
+
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
 
@@ -40,9 +50,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (id == R.id.filter_option_restaurant) {
             //TODO: When user filter by restaurant
+            searchView.setQueryHint(getResources().getString(R.string.search_by_food));
             return true;
         }else if(id == R.id.filter_option_money){
             //TODO: When user filter by money
+            searchView.setQueryHint(getResources().getString(R.string.search_by_price));
             return true;
         }
 

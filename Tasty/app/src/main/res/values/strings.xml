@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Tasty</string>
-    <string name="filter_option_restaurant">Filtrar por restaurante</string>
-    <string name="filter_option_money">Filtrar por dinero</string>
+    <string name="filter_option_restaurant">Filtrar por comida</string>
+    <string name="filter_option_money">Filtrar por precio</string>
+
+    <string name="search_by_food">Buscar por comida</string>
+    <string name="search_by_price">Buscar por precio</string>
+
+    <string name="title_geolocation">Geolocation</string>
 </resources>
