@@ -2,6 +2,7 @@ package com.example.tasty;
 
 import android.Manifest;
 import android.app.SearchManager;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -17,8 +18,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback
+{
 
     private GoogleMap googleMap;
     private SearchView searchView;
@@ -41,6 +44,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                makeSearch(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        } );
+
         return true;
     }
 
@@ -48,7 +65,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.filter_option_restaurant) {
+        if(id == R.id.action_geolocation){
+            activateGeolocation();
+        }else if (id == R.id.filter_option_restaurant) {
             //TODO: When user filter by restaurant
             searchView.setQueryHint(getResources().getString(R.string.search_by_food));
             return true;
@@ -57,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             searchView.setQueryHint(getResources().getString(R.string.search_by_price));
             return true;
         }
-
 
         return super.onOptionsItemSelected(item);
     }
@@ -83,5 +101,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void makeSearch(String query)
+    {
+        System.out.println(query);
+    }
+
+    private void activateGeolocation()
+    {
+        System.out.println("activated");
     }
 }
