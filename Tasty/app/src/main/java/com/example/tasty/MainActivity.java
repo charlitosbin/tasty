@@ -2,29 +2,31 @@ package com.example.tasty;
 
 import android.Manifest;
 import android.app.SearchManager;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import com.example.tasty.Components.GoogleApliCallbacksImplementation;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback
 {
 
     private GoogleMap googleMap;
     private SearchView searchView;
+    private GoogleApiClient mGoogleApiClient;
+    private GoogleApliCallbacksImplementation mGoogleApliClientImplementation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         setGoogleMap();
     }
 
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 makeSearch(query);
@@ -56,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
-        } );
+        });
 
         return true;
     }
@@ -91,6 +94,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.googleMap.setMyLocationEnabled(true);
     }
 
+    @Override
+    protected void onStop(){
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
     private void setGoogleMap(){
         try {
             if(googleMap == null) {
@@ -103,6 +112,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    protected  synchronized  void buildGoogleApiClient(){
+        Log.d("Building", "Building googleAPIClient");
+        if(mGoogleApiClient == null){
+            mGoogleApliClientImplementation = new GoogleApliCallbacksImplementation();
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(mGoogleApliClientImplementation)
+                    .addOnConnectionFailedListener(mGoogleApliClientImplementation)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+    }
+
     private void makeSearch(String query)
     {
         System.out.println(query);
@@ -110,6 +131,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void activateGeolocation()
     {
-        System.out.println("activated");
+        Log.d("Button press", "GPS Press");
+        if(mGoogleApiClient != null){
+            mGoogleApiClient.connect();
+        }
     }
 }
