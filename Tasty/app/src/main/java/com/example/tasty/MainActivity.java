@@ -3,6 +3,7 @@ package com.example.tasty;
 import android.Manifest;
 import android.app.SearchManager;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -13,7 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.tasty.Components.GoogleApliCallbacksImplementation;
+import com.example.tasty.Components.GoogleApiCallbacksImplementation;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,16 +27,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap googleMap;
     private SearchView searchView;
     private GoogleApiClient mGoogleApiClient;
-    private GoogleApliCallbacksImplementation mGoogleApliClientImplementation;
+    private GoogleApiCallbacksImplementation mGoogleApliClientImplementation;
+
+    interface GoogleGetLocationCallback{
+        void DrawLocation(Location location);
+    }
+
+    public class GoogleGetLocationImplementation implements GoogleGetLocationCallback{
+        @Override
+        public void DrawLocation(Location location) {
+            Log.d("Callback", "I'm inside callback");
+            Log.d("Latitude", String.valueOf(location.getLatitude()));
+            Log.d("Longitude", String.valueOf(location.getLongitude()));
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        buildGoogleApiClient();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         setGoogleMap();
     }
 
@@ -115,12 +130,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected  synchronized  void buildGoogleApiClient(){
         Log.d("Building", "Building googleAPIClient");
         if(mGoogleApiClient == null){
-            mGoogleApliClientImplementation = new GoogleApliCallbacksImplementation();
+            GoogleGetLocationImplementation callbackImplementation = new GoogleGetLocationImplementation();
+
+            mGoogleApliClientImplementation = new GoogleApiCallbacksImplementation(this);
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(mGoogleApliClientImplementation)
                     .addOnConnectionFailedListener(mGoogleApliClientImplementation)
                     .addApi(LocationServices.API)
                     .build();
+            mGoogleApliClientImplementation.setGoogleApiClient(mGoogleApiClient);
+            mGoogleApliClientImplementation.setCallback(callbackImplementation);
         }
     }
 
