@@ -16,7 +16,9 @@ public class DummyServices {
                 44510,
                 "Jalisco",
                 "Guadalajara",
-                "Av de Las Rosas 2830-A, Chapalita"
+                "Av de Las Rosas 2830-A, Chapalita",
+                20.6649294,
+                -103.3942613
         ));
 
         restaurantsList.add(new RestaurantModel(
@@ -24,7 +26,9 @@ public class DummyServices {
                 44490,
                 "Jalisco",
                 "Guadalajara",
-                "Av. Mariano Otero 3261, Verde Valle"
+                "Av. Mariano Otero 3261, Verde Valle",
+                20.6599995,
+                -103.3942857
         ));
 
         restaurantsList.add(new RestaurantModel(
@@ -32,7 +36,9 @@ public class DummyServices {
                 44520,
                 "Jalisco",
                 "Guadalajara",
-                "Calle San José 1933, Chapalita"
+                "Calle San José 1933, Chapalita",
+                20.6635223,
+                -103.4622748
         ));
 
 
@@ -41,7 +47,9 @@ public class DummyServices {
                 44100,
                 "Jalisco",
                 "Guadalajara",
-                "Av. Corona 126, Centro"
+                "Av. Corona 126, Centro",
+                20.6747042,
+                -103.4166297
         ));
 
         restaurantsList.add(new RestaurantModel(
@@ -49,7 +57,9 @@ public class DummyServices {
                 44190,
                 "Jalisco",
                 "Guadalajara",
-                "Avenida de la Paz 1701, Moderna"
+                "Avenida de la Paz 1701, Moderna",
+                20.6708599,
+                -103.4330082
         ));
 
         return restaurantsList;

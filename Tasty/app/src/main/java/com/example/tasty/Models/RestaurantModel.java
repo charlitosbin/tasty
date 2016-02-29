@@ -1,8 +1,9 @@
 package com.example.tasty.Models;
 
 public class RestaurantModel {
-    private double latitude;
+
     private double longitude;
+    private double latitude;
 
     private String name;
     private int zipCode;
@@ -17,6 +18,17 @@ public class RestaurantModel {
         this.zipCode = zipCode;
         this.state = state;
         this.direction = direction;
+
+    }
+
+    public RestaurantModel(String name, int zipCode, String state, String country, String direction,
+                           double latitude, double longitude) {
+        this.name = name;
+        this.zipCode = zipCode;
+        this.state = state;
+        this.direction = direction;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public RestaurantModel(String name, String state, String country, String direction)
@@ -27,68 +39,68 @@ public class RestaurantModel {
         this.direction = direction;
     }
 
-    public double GetLatitude(){
+    public double getLatitude(){
         return latitude;
     }
 
-    public void SetLatitude(double latitude){
+    public void setLatitude(double latitude){
         this.latitude = latitude;
     }
 
-    public double GetLongitude(){
+    public double getLongitude(){
         return longitude;
     }
 
-    public void SetLongitude(double longitude){
+    public void setLongitude(double longitude){
         this.longitude = longitude;
     }
 
-    public String GetName(){
+    public String getName(){
         return name;
     }
 
-    public void SetName(String name){
+    public void setName(String name){
         this.name = name;
     }
 
-    public int GetZipCode(){
+    public int getZipCode(){
         return zipCode;
     }
 
-    public void SetZipCode(int zipCode){
+    public void setZipCode(int zipCode){
         this.zipCode = zipCode;
     }
 
-    public String GetState(){
+    public String getState(){
         return state;
     }
 
-    public void SetState(String state){
+    public void setState(String state){
         this.state = state;
     }
 
-    public String GetDirection(){
+    public String getDirection(){
         return direction;
     }
 
-    public String GetCountry(){
+    public String getCountry(){
         return country;
     }
 
-    public void SetCountry(String country){
+    public void setCountry(String country){
         this.country = country;
     }
 
-    public void SetDirection(String direction){
+    public void setDirection(String direction){
         this.direction = direction;
     }
 
-    public EnumRestaurants GetRestaurantType()
+    public EnumRestaurants getRestaurantType()
     {
         return restaurantType;
     }
 
-    public void SetRestaurantType(EnumRestaurants restaurantType){
+    public void setRestaurantType(EnumRestaurants restaurantType){
         this.restaurantType = restaurantType;
     }
 }

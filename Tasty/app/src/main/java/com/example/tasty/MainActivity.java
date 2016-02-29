@@ -15,11 +15,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.tasty.Components.GoogleApiCallbacksImplementation;
+import com.example.tasty.Models.RestaurantModel;
+import com.example.tasty.Services.DummyServices;
+import com.example.tasty.Utils.MarkerUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback
 {
@@ -28,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SearchView searchView;
     private GoogleApiClient mGoogleApiClient;
     private GoogleApiCallbacksImplementation mGoogleApliClientImplementation;
+    private DummyServices dummyServices;
+    private List<RestaurantModel> restaurantModelList;
 
     interface GoogleGetLocationCallback{
         void DrawLocation(Location location);
@@ -45,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.dummyServices = new DummyServices();
+
         setContentView(R.layout.activity_main);
 
         buildGoogleApiClient();
@@ -107,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         this.googleMap.setMyLocationEnabled(true);
+
+
     }
 
     @Override
@@ -151,8 +162,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void activateGeolocation()
     {
         Log.d("Button press", "GPS Press");
+        restaurantModelList = dummyServices.GetRestaurants("mexican");
+        printMarkers();
+
         if(mGoogleApiClient != null){
             mGoogleApiClient.connect();
+        }
+    }
+
+    private void printMarkers()
+    {
+        if(googleMap != null) {
+            if (restaurantModelList != null && restaurantModelList.size() > 0) {
+                for (RestaurantModel restaurant : restaurantModelList) {
+                    MarkerUtil.addMarker(this.googleMap, restaurant);
+                }
+            }
         }
     }
 }
