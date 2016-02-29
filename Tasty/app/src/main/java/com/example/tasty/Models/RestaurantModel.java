@@ -7,16 +7,23 @@ public class RestaurantModel {
     private String name;
     private int zipCode;
     private String state;
+    private String country;
     private String direction;
 
     private EnumRestaurants restaurantType;
 
-    public RestaurantModel(double latitude, double longitude, String name, int zipCode, String state, String direction) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public RestaurantModel(String name, int zipCode, String state, String country, String direction) {
         this.name = name;
         this.zipCode = zipCode;
         this.state = state;
+        this.direction = direction;
+    }
+
+    public RestaurantModel(String name, String state, String country, String direction)
+    {
+        this.name = name;
+        this.state = state;
+        this.country = country;
         this.direction = direction;
     }
 
@@ -62,6 +69,14 @@ public class RestaurantModel {
 
     public String GetDirection(){
         return direction;
+    }
+
+    public String GetCountry(){
+        return country;
+    }
+
+    public void SetCountry(String country){
+        this.country = country;
     }
 
     public void SetDirection(String direction){
