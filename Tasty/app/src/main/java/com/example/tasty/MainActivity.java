@@ -52,8 +52,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.d("Callback", "I'm inside callback");
             Log.d("Latitude", String.valueOf(location.getLatitude()));
             Log.d("Longitude", String.valueOf(location.getLongitude()));
-            if(location != null)
-                currentPosition = new LatLng(location.getLatitude(),location.getLongitude());
+            if(location != null) {
+                currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                Log.d("Button press", "GPS Press");
+                restaurantModelList = dummyServices.GetRestaurants("mexican");
+                MarkerUtil.addMarkers(googleMap,restaurantModelList);
+                MarkerUtil.addMarker(googleMap,currentPosition, "You are here",true);
+            }
         }
     }
 
@@ -173,11 +178,5 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(mGoogleApiClient != null){
             mGoogleApiClient.connect();
         }
-
-        Log.d("Button press", "GPS Press");
-        restaurantModelList = dummyServices.GetRestaurants("mexican");
-        MarkerUtil.addMarkers(googleMap,restaurantModelList);
-        MarkerUtil.addMarker(googleMap,currentPosition, "You are here",true);
-
     }
 }
