@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_height="@dimen/row_restaurant_height"
+    style="@style/MatchParent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+       style="@style/MatchHeighttWrapContentWidth">
+        <ImageView
+            android:id="@+id/restaurantImageView"
+            android:src="@drawable/ic_restaurant"
+            style="@style/RowIconImage" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        style="@style/MatchParent">
+        <TextView
+            android:id="@+id/restaurantNameTextView"
+            android:text="@string/restaurant_name_dummy"
+            style="@style/RowText"/>
+        <TextView
+            android:id="@+id/restaurantAddressTextView"
+            android:text="@string/restaurant_address_dummy"
+            style="@style/RowText"/>
+        <TextView
+            android:id="@+id/restaurantCountryTextView"
+            android:text="@string/restaurant_country_dummy"
+            style="@style/RowText"/>
+    </LinearLayout>
+</LinearLayout>

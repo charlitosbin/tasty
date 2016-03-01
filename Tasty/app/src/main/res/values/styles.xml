@@ -17,4 +17,27 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="MatchParent">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="MatchHeighttWrapContentWidth">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="RowIconImage">
+        <item name="android:layout_height">@dimen/row_icon_height</item>
+        <item name="android:layout_width">@dimen/row_icon_width</item>
+        <item name="android:layout_marginLeft">15dp</item>
+    </style>
+
+    <style name="RowText">
+        <item name="android:textColor">@color/Black</item>
+        <item name="android:textSize">@dimen/row_text_size</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
 </resources>

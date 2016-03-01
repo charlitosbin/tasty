@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setGoogleMap(){
         try {
             if(googleMap == null) {
-                mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.main_map);
+                mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.mainMap);
                 GoogleMapOptions mapOptions = new GoogleMapOptions()
                         .mapType(GoogleMap.MAP_TYPE_NORMAL)
                         .zoomControlsEnabled(true)

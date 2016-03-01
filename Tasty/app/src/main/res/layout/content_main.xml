@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.tasty.MainActivity"
-    tools:showIn="@layout/activity_main">
-    <fragment
-        android:id="@+id/main_map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        class="com.google.android.gms.maps.MapFragment" />
-</RelativeLayout>
+    tools:showIn="@layout/activity_main"
+    style="@style/MatchParent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:weightSum="100"
+        style="@style/MatchParent">
+        <fragment
+            android:id="@+id/mainMap"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="70"
+            class="com.google.android.gms.maps.MapFragment" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"
+            android:background="@color/White">
+            <ListView
+                android:id="@+id/restaurantListView"
+                style="@style/MatchParent" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

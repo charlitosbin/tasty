@@ -10,4 +10,10 @@
     <string name="google_map_id" translatable="false" templateMergeStrategy="preserve">
         AIzaSyBVXQxzoeG-4d-meH991fAmnmokadaJs-c
     </string>
+
+    <string name="restaurant_name_dummy">La Chata Restaurant</string>
+    <string name="restaurant_address_dummy">Av. Corona 126, Centro</string>
+    <string name="restaurant_zipcode_dummy">44100</string>
+    <string name="restaurant_country_dummy">Guadalajara, Jalisco</string>
+    <string name="restaurant_state_dummy">Jalisco</string>
 </resources>
