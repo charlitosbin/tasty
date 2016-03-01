@@ -32,7 +32,9 @@
         <!-- Google MAP API key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCUyL8UJOgY0u7EcXyXr7WdFXghJTXGf1E"/>
+            android:value="AIzaSyBVXQxzoeG-4d-meH991fAmnmokadaJs-c"/>
+
+        <!--AIzaSyBVXQxzoeG-4d-meH991fAmnmokadaJs-c -->
     </application>
 
 </manifest>

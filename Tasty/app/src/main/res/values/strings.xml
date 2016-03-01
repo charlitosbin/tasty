@@ -7,4 +7,7 @@
     <string name="search_by_price">Buscar por precio</string>
 
     <string name="title_geolocation">Geolocation</string>
+    <string name="google_map_id" translatable="false" templateMergeStrategy="preserve">
+        AIzaSyBVXQxzoeG-4d-meH991fAmnmokadaJs-c
+    </string>
 </resources>

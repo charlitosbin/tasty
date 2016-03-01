@@ -23,12 +23,14 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback
 {
 
+    private MapFragment mapFragment;
     private GoogleMap googleMap;
     private SearchView searchView;
     private GoogleApiClient mGoogleApiClient;
@@ -56,11 +58,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         setContentView(R.layout.activity_main);
 
-        buildGoogleApiClient();
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setGoogleMap();
+        buildGoogleApiClient();
     }
 
     @Override
@@ -129,16 +130,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setGoogleMap(){
         try {
             if(googleMap == null) {
-                ((MapFragment) getFragmentManager().
-                        findFragmentById(R.id.main_map)).getMapAsync(this);
-
+                mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.main_map);
+                mapFragment.getMapAsync(this);
             }
         }catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    protected  synchronized  void buildGoogleApiClient(){
+    protected  synchronized  void buildGoogleApiClient() {
         Log.d("Building", "Building googleAPIClient");
         if(mGoogleApiClient == null){
             GoogleGetLocationImplementation callbackImplementation = new GoogleGetLocationImplementation();
