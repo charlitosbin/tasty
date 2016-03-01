@@ -21,9 +21,11 @@ import com.example.tasty.Utils.MarkerUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+
 
 import java.util.List;
 
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DummyServices dummyServices;
     private List<RestaurantModel> restaurantModelList;
 
+    private LatLng currentPosition;
+
     interface GoogleGetLocationCallback{
         void DrawLocation(Location location);
     }
@@ -48,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.d("Callback", "I'm inside callback");
             Log.d("Latitude", String.valueOf(location.getLatitude()));
             Log.d("Longitude", String.valueOf(location.getLongitude()));
+            if(location != null)
+                currentPosition = new LatLng(location.getLatitude(),location.getLongitude());
         }
     }
 
@@ -117,8 +123,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         this.googleMap.setMyLocationEnabled(true);
-
-
     }
 
     @Override
@@ -131,6 +135,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         try {
             if(googleMap == null) {
                 mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.main_map);
+                GoogleMapOptions mapOptions = new GoogleMapOptions()
+                        .mapType(GoogleMap.MAP_TYPE_NORMAL)
+                        .zoomControlsEnabled(true)
+                        .compassEnabled(true);
+
                 mapFragment.getMapAsync(this);
             }
         }catch (Exception e) {
@@ -161,23 +170,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void activateGeolocation()
     {
-        Log.d("Button press", "GPS Press");
-        restaurantModelList = dummyServices.GetRestaurants("mexican");
-        printMarkers();
-
         if(mGoogleApiClient != null){
             mGoogleApiClient.connect();
         }
-    }
 
-    private void printMarkers()
-    {
-        if(googleMap != null) {
-            if (restaurantModelList != null && restaurantModelList.size() > 0) {
-                for (RestaurantModel restaurant : restaurantModelList) {
-                    MarkerUtil.addMarker(this.googleMap, restaurant);
-                }
-            }
-        }
+        Log.d("Button press", "GPS Press");
+        restaurantModelList = dummyServices.GetRestaurants("mexican");
+        MarkerUtil.addMarkers(googleMap,restaurantModelList);
+        MarkerUtil.addMarker(googleMap,currentPosition, "You are here",true);
+
     }
 }
