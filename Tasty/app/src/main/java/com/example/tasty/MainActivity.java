@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.tasty.Components.GoogleApiCallbacksImplementation;
+import com.example.tasty.Components.RestaurantAdapter;
 import com.example.tasty.Models.RestaurantModel;
 import com.example.tasty.Services.DummyServices;
 import com.example.tasty.Utils.MarkerUtil;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private List<RestaurantModel> restaurantModelList;
     private RecyclerView restraurantRv;
+    private RestaurantAdapter adapter;
 
     private LatLng currentPosition;
 
@@ -189,6 +191,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void makeSearch(String query)
     {
         System.out.println(query);
+        adapter = new RestaurantAdapter(restaurantModelList);
+        restraurantRv.setAdapter(adapter);
+
     }
 
     private void activateGeolocation()
