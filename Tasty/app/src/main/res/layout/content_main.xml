@@ -22,8 +22,8 @@
             android:layout_height="0dp"
             android:layout_weight="30"
             android:background="@color/White">
-            <ListView
-                android:id="@+id/restaurantListView"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/restaurantRv"
                 style="@style/MatchParent" />
         </LinearLayout>
     </LinearLayout>

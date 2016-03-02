@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -38,7 +40,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleApiClient mGoogleApiClient;
     private GoogleApiCallbacksImplementation mGoogleApliClientImplementation;
     private DummyServices dummyServices;
+
     private List<RestaurantModel> restaurantModelList;
+    private RecyclerView restraurantRv;
 
     private LatLng currentPosition;
 
@@ -52,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.d("Callback", "I'm inside callback");
             Log.d("Latitude", String.valueOf(location.getLatitude()));
             Log.d("Longitude", String.valueOf(location.getLongitude()));
+
             if(location != null) {
                 currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
                 Log.d("Button press", "GPS Press");
@@ -65,9 +70,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.dummyServices = new DummyServices();
-
         setContentView(R.layout.activity_main);
+        setVariables();
+        setRecyclerViewProperties();
+
+        this.dummyServices = new DummyServices();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -134,6 +141,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onStop(){
         mGoogleApiClient.disconnect();
         super.onStop();
+    }
+
+    private void setVariables(){
+        restraurantRv = (RecyclerView)findViewById(R.id.restaurantRv);
+    }
+
+    private void setRecyclerViewProperties(){
+        if(restraurantRv != null){
+            LinearLayoutManager llm = new LinearLayoutManager(this);
+            restraurantRv.setLayoutManager(llm);
+        }
     }
 
     private void setGoogleMap(){
