@@ -35,6 +35,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback
 {
 
+//Hola soy Ernesto
     private MapFragment mapFragment;
     private GoogleMap googleMap;
     private SearchView searchView;
