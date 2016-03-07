@@ -26,6 +26,7 @@ public class RestaurantModel {
         this.name = name;
         this.zipCode = zipCode;
         this.state = state;
+        this.country = country;
         this.direction = direction;
         this.latitude = latitude;
         this.longitude = longitude;

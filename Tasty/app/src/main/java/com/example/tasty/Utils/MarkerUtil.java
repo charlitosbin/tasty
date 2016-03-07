@@ -9,6 +9,7 @@ import com.example.tasty.Models.RestaurantModel;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -28,8 +29,12 @@ public final class MarkerUtil {
             MarkerOptions marker = addMarker(googleMap,latLng, restaurant.getName(),false);
             lstMarkers.add(marker);
         }
+    }
 
-        centerCamera(googleMap,lstMarkers);
+    public static  void addMarkerAndCenterCamera(GoogleMap googleMap,LatLng position, String title) {
+        MarkerOptions marker = addMarker(googleMap, position,title,true);
+
+        centerCamera(googleMap, marker);
     }
 
     public static MarkerOptions addMarker(GoogleMap googleMap, LatLng latLng, String title, boolean displayTitle){
@@ -37,10 +42,14 @@ public final class MarkerUtil {
         markerOptions.position(latLng);
         markerOptions.title(title);
 
-        Marker m = googleMap.addMarker(markerOptions);
+        if(displayTitle){
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        }
 
+        Marker m = googleMap.addMarker(markerOptions);
         if(displayTitle){
             m.showInfoWindow();
+
         }
 
         return  markerOptions;
@@ -50,9 +59,9 @@ public final class MarkerUtil {
         LatLng position = new LatLng(restaurant.getLatitude(),restaurant.getLongitude());
 
         googleMap.addMarker(new MarkerOptions()
-        .position(position)
-        .title(restaurant.getName()));
-        Log.d("map","map");
+                .position(position)
+                .title(restaurant.getName()));
+        Log.d("map", "map");
     }
 
     public static void setupCamera(GoogleMap googleMap, LatLng latLng, int zoom){
@@ -72,5 +81,12 @@ public final class MarkerUtil {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         googleMap.animateCamera(cameraUpdate);
 
+    }
+
+
+
+    public  static void centerCamera(GoogleMap googleMap, MarkerOptions marker){
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 10);
+        googleMap.animateCamera(cameraUpdate);
     }
 }

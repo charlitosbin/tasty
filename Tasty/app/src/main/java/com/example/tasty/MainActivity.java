@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,12 +16,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 import com.example.tasty.Components.GoogleApiCallbacksImplementation;
 import com.example.tasty.Components.RestaurantAdapter;
 import com.example.tasty.Models.RestaurantModel;
 import com.example.tasty.Services.DummyServices;
 import com.example.tasty.Utils.MarkerUtil;
+import com.example.tasty.Utils.Util;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,7 +38,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback
 {
 
-//Hola soy Ernesto
+
+    private LinearLayout llMain;
     private MapFragment mapFragment;
     private GoogleMap googleMap;
     private SearchView searchView;
@@ -62,10 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             if(location != null) {
                 currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                Log.d("Button press", "GPS Press");
-                restaurantModelList = dummyServices.GetRestaurants("mexican");
-                MarkerUtil.addMarkers(googleMap,restaurantModelList);
-                MarkerUtil.addMarker(googleMap,currentPosition, "You are here",true);
+                MarkerUtil.addMarkerAndCenterCamera(googleMap, currentPosition, "Aqui estas");
             }
         }
     }
@@ -137,7 +138,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
 
-        this.googleMap.setMyLocationEnabled(true);
+        this.googleMap.setMyLocationEnabled(false);
+        this.googleMap.getUiSettings().setCompassEnabled(false);
+        this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        this.googleMap.getUiSettings().setMapToolbarEnabled(false);
     }
 
     @Override
@@ -147,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setVariables(){
+        llMain = (LinearLayout)findViewById(R.id.mainLL);
         restraurantRv = (RecyclerView)findViewById(R.id.restaurantRv);
     }
 
@@ -192,9 +197,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void makeSearch(String query)
     {
         System.out.println(query);
-        adapter = new RestaurantAdapter(restaurantModelList);
-        restraurantRv.setAdapter(adapter);
-
+        Log.d("Button press", "GPS Press");
+        if(currentPosition != null) {
+            restaurantModelList = dummyServices.GetRestaurants("mexican");
+            MarkerUtil.addMarkers(googleMap, restaurantModelList);
+            MarkerUtil.addMarkerAndCenterCamera(googleMap,currentPosition,"Aqui estas");
+            adapter = new RestaurantAdapter(restaurantModelList);
+            restraurantRv.setAdapter(adapter);
+        }else{
+            Snackbar snack = Util.createSnackbar(llMain, getResources().getString(R.string.location_service_error));
+            snack.show();
+        }
     }
 
     private void activateGeolocation()
