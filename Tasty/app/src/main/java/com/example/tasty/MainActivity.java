@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import android.widget.LinearLayout;
 
 import com.example.tasty.Components.GoogleApiCallbacksImplementation;
 import com.example.tasty.Components.RestaurantAdapter;
+import com.example.tasty.Components.RestaurantRvItemClickListener;
 import com.example.tasty.Models.RestaurantModel;
 import com.example.tasty.Services.DummyServices;
 import com.example.tasty.Utils.MarkerUtil;
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DummyServices dummyServices;
 
     private List<RestaurantModel> restaurantModelList;
-    private RecyclerView restraurantRv;
+    private RecyclerView restaurantRv;
     private RestaurantAdapter adapter;
 
     private LatLng currentPosition;
@@ -152,13 +154,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void setVariables(){
         llMain = (LinearLayout)findViewById(R.id.mainLL);
-        restraurantRv = (RecyclerView)findViewById(R.id.restaurantRv);
+        restaurantRv = (RecyclerView)findViewById(R.id.restaurantRv);
     }
 
     private void setRecyclerViewProperties(){
-        if(restraurantRv != null){
+        if(restaurantRv != null){
             LinearLayoutManager llm = new LinearLayoutManager(this);
-            restraurantRv.setLayoutManager(llm);
+            restaurantRv.setLayoutManager(llm);
         }
     }
 
@@ -201,9 +203,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(currentPosition != null) {
             restaurantModelList = dummyServices.GetRestaurants("mexican");
             MarkerUtil.addMarkers(googleMap, restaurantModelList);
-            MarkerUtil.addMarkerAndCenterCamera(googleMap,currentPosition,"Aqui estas");
+            MarkerUtil.addMarkerAndCenterCamera(googleMap, currentPosition, "Aqui estas");
             adapter = new RestaurantAdapter(restaurantModelList);
-            restraurantRv.setAdapter(adapter);
+            restaurantRv.setAdapter(adapter);
+            restaurantRv.addOnItemTouchListener(
+                    new RestaurantRvItemClickListener(this.getBaseContext(), new RestaurantRvItemClickListener.OnItemClickListener(){
+                     @Override
+                    public void onItemClick(View view, int position){
+                         Log.d("position", "" +position);
+                     }})
+            );
         }else{
             Snackbar snack = Util.createSnackbar(llMain, getResources().getString(R.string.location_service_error));
             snack.show();
