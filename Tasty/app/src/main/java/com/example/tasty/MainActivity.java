@@ -33,6 +33,7 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.api.client.http.HttpResponse;
 
 
 import java.util.List;
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar(toolbar);
         setGoogleMap();
         buildGoogleApiClient();
+
     }
 
     @Override
