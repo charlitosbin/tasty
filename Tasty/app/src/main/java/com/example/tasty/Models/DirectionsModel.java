@@ -4,17 +4,17 @@ import com.google.api.client.util.Key;
 
 import java.util.List;
 
-public  class DirectionsModel {
+public final class DirectionsModel {
 
     @Key("routes")
     public List<Route> routes;
 
-    public class Route{
+    public static class Route{
         @Key("overview_polyline")
         public OverviewPolyLine overviewPolyline;
     }
 
-    public class OverviewPolyLine {
+    public static class OverviewPolyLine {
         @Key("points")
         public String points;
     }

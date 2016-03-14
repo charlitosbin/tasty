@@ -23,8 +23,9 @@ import com.example.tasty.Components.GoogleApiCallbacksImplementation;
 import com.example.tasty.Components.RestaurantAdapter;
 import com.example.tasty.Components.RestaurantRvItemClickListener;
 import com.example.tasty.Models.RestaurantModel;
+import com.example.tasty.Services.DirectionServices;
 import com.example.tasty.Services.DummyServices;
-import com.example.tasty.Utils.MarkerUtil;
+import com.example.tasty.Utils.GoogleMapUtis;
 import com.example.tasty.Utils.Util;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -33,7 +34,6 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.api.client.http.HttpResponse;
 
 
 import java.util.List;
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             if(location != null) {
                 currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                MarkerUtil.addMarkerAndCenterCamera(googleMap, currentPosition, "Aqui estas");
+                GoogleMapUtis.addMarkerAndCenterCamera(googleMap, currentPosition, "Aqui estas");
             }
         }
     }
@@ -186,7 +186,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d("Building", "Building googleAPIClient");
         if(mGoogleApiClient == null){
             GoogleGetLocationImplementation callbackImplementation = new GoogleGetLocationImplementation();
-
             mGoogleApliClientImplementation = new GoogleApiCallbacksImplementation(this);
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(mGoogleApliClientImplementation)
@@ -202,10 +201,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     {
         System.out.println(query);
         Log.d("Button press", "GPS Press");
+        new DirectionServices(googleMap, "Chicago,IL", "Los Angeles,CA").execute();
+
         if(currentPosition != null) {
             restaurantModelList = dummyServices.GetRestaurants("mexican");
-            MarkerUtil.addMarkers(googleMap, restaurantModelList);
-            MarkerUtil.addMarkerAndCenterCamera(googleMap, currentPosition, "Aqui estas");
+            GoogleMapUtis.addMarkers(googleMap, restaurantModelList);
+            GoogleMapUtis.addMarkerAndCenterCamera(googleMap, currentPosition, "Aqui estas");
             adapter = new RestaurantAdapter(restaurantModelList);
             restaurantRv.setAdapter(adapter);
             restaurantRv.addOnItemTouchListener(

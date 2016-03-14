@@ -16,7 +16,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class MarkerUtil {
+public final class GoogleMapUtis {
 
     public static void addMarkers(GoogleMap googleMap,  List<RestaurantModel> restaurantModelList){
         if(googleMap != null && restaurantModelList != null){
@@ -102,5 +102,17 @@ public final class MarkerUtil {
             options.add(latLng);
         }
         googleMap.addPolyline(options);
+    }
+
+    public static void fixZoomForLatLngs(GoogleMap googleMap, List<LatLng> latlngs){
+        if(latlngs!= null && latlngs.size() > 0){
+            LatLngBounds.Builder bc = new LatLngBounds.Builder();
+
+            for(LatLng latLng : latlngs){
+                bc.include(latLng);
+            }
+
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bc.build(),50),4000,null);
+        }
     }
 }
