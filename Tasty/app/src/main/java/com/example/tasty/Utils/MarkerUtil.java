@@ -1,8 +1,5 @@
 package com.example.tasty.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.util.Log;
 
 import com.example.tasty.Models.RestaurantModel;
@@ -14,6 +11,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class MarkerUtil {
 
@@ -83,10 +84,23 @@ public final class MarkerUtil {
 
     }
 
-
-
     public  static void centerCamera(GoogleMap googleMap, MarkerOptions marker){
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 10);
         googleMap.animateCamera(cameraUpdate);
+    }
+
+    public static void clearMarkers(GoogleMap googleMap, List<Marker> markers){
+        if(googleMap != null){
+            googleMap.clear();
+            markers.clear();
+        }
+    }
+
+    public static  void addPolylineToMap(GoogleMap googleMap, List<LatLng> latLngs){
+        PolylineOptions options = new PolylineOptions();
+        for(LatLng latLng : latLngs){
+            options.add(latLng);
+        }
+        googleMap.addPolyline(options);
     }
 }
