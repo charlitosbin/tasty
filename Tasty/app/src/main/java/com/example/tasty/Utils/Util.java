@@ -72,7 +72,7 @@ public final class Util {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         return  restaurantModel;
     }
 
