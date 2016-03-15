@@ -34,6 +34,4 @@ dependencies {
     compile 'com.google.http-client:google-http-client-jackson:1.15.0-rc'
 
 
-
-
 }
