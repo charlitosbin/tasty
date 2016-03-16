@@ -1,20 +1,22 @@
 package com.example.tasty.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.util.Log;
 
 import com.example.tasty.Models.RestaurantModel;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
-public final class MarkerUtil {
+import java.util.ArrayList;
+import java.util.List;
+
+public final class GoogleMapUtis {
 
     public static void addMarkers(GoogleMap googleMap,  List<RestaurantModel> restaurantModelList){
         if(googleMap != null && restaurantModelList != null){
@@ -28,8 +30,12 @@ public final class MarkerUtil {
             MarkerOptions marker = addMarker(googleMap,latLng, restaurant.getName(),false);
             lstMarkers.add(marker);
         }
+    }
 
-        centerCamera(googleMap,lstMarkers);
+    public static  void addMarkerAndCenterCamera(GoogleMap googleMap,LatLng position, String title) {
+        MarkerOptions marker = addMarker(googleMap, position,title,true);
+
+        centerCamera(googleMap, marker);
     }
 
     public static MarkerOptions addMarker(GoogleMap googleMap, LatLng latLng, String title, boolean displayTitle){
@@ -37,10 +43,14 @@ public final class MarkerUtil {
         markerOptions.position(latLng);
         markerOptions.title(title);
 
-        Marker m = googleMap.addMarker(markerOptions);
+        if(displayTitle){
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        }
 
+        Marker m = googleMap.addMarker(markerOptions);
         if(displayTitle){
             m.showInfoWindow();
+
         }
 
         return  markerOptions;
@@ -50,9 +60,9 @@ public final class MarkerUtil {
         LatLng position = new LatLng(restaurant.getLatitude(),restaurant.getLongitude());
 
         googleMap.addMarker(new MarkerOptions()
-        .position(position)
-        .title(restaurant.getName()));
-        Log.d("map","map");
+                .position(position)
+                .title(restaurant.getName()));
+        Log.d("map", "map");
     }
 
     public static void setupCamera(GoogleMap googleMap, LatLng latLng, int zoom){
@@ -72,5 +82,37 @@ public final class MarkerUtil {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         googleMap.animateCamera(cameraUpdate);
 
+    }
+
+    public  static void centerCamera(GoogleMap googleMap, MarkerOptions marker){
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 10);
+        googleMap.animateCamera(cameraUpdate);
+    }
+
+    public static void clearMarkers(GoogleMap googleMap, List<Marker> markers){
+        if(googleMap != null){
+            googleMap.clear();
+            markers.clear();
+        }
+    }
+
+    public static  void addPolylineToMap(GoogleMap googleMap, List<LatLng> latLngs){
+        PolylineOptions options = new PolylineOptions();
+        for(LatLng latLng : latLngs){
+            options.add(latLng);
+        }
+        googleMap.addPolyline(options);
+    }
+
+    public static void fixZoomForLatLngs(GoogleMap googleMap, List<LatLng> latlngs){
+        if(latlngs!= null && latlngs.size() > 0){
+            LatLngBounds.Builder bc = new LatLngBounds.Builder();
+
+            for(LatLng latLng : latlngs){
+                bc.include(latLng);
+            }
+
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bc.build(),50),4000,null);
+        }
     }
 }

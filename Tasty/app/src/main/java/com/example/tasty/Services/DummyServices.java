@@ -13,7 +13,7 @@ public class DummyServices {
 
         restaurantsList.add(new RestaurantModel(
                 "Paulo Maggiani's di colombo",
-                44510,
+                "44510",
                 "Jalisco",
                 "Guadalajara",
                 "Av de Las Rosas 2830-A, Chapalita",
@@ -23,7 +23,7 @@ public class DummyServices {
 
         restaurantsList.add(new RestaurantModel(
                 "La Flor de Calabaza",
-                44490,
+                "44490",
                 "Jalisco",
                 "Guadalajara",
                 "Av. Mariano Otero 3261, Verde Valle",
@@ -33,7 +33,7 @@ public class DummyServices {
 
         restaurantsList.add(new RestaurantModel(
                 "La Casa del Waffle",
-                44520,
+                "44520",
                 "Jalisco",
                 "Guadalajara",
                 "Calle San José 1933, Chapalita",
@@ -44,7 +44,7 @@ public class DummyServices {
 
         restaurantsList.add(new RestaurantModel(
                 "La Chata",
-                44100,
+                "44100",
                 "Jalisco",
                 "Guadalajara",
                 "Av. Corona 126, Centro",
@@ -54,7 +54,7 @@ public class DummyServices {
 
         restaurantsList.add(new RestaurantModel(
                 "Suehiro",
-                44190,
+                "44190",
                 "Jalisco",
                 "Guadalajara",
                 "Avenida de la Paz 1701, Moderna",

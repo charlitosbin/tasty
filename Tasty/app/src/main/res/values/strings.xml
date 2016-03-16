@@ -16,4 +16,6 @@
     <string name="restaurant_zipcode_dummy">44100</string>
     <string name="restaurant_country_dummy">Guadalajara, Jalisco</string>
     <string name="restaurant_state_dummy">Jalisco</string>
+
+    <string name="location_service_error">Necesitas activar los servicios de localizacion.</string>
 </resources>

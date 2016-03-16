@@ -2,6 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_height="@dimen/row_restaurant_height"
+    android:background="@drawable/row_selector"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     style="@style/MatchParent">
     <LinearLayout
         android:orientation="vertical"

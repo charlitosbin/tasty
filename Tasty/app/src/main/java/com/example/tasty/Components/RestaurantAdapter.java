@@ -54,7 +54,7 @@ public class RestaurantAdapter  extends RecyclerView.Adapter<RestaurantAdapter.R
         String countryState = restaurant.getCountry() + ", " + restaurant.getState();
 
         holder.restaurantName.setText(restaurant.getName());
-        holder.restaurantAddress.setText(restaurant.getDirection());
+        holder.restaurantAddress.setText(restaurant.getAddress());
         holder.restaurantCountryAddress.setText(countryState);
     }
 
