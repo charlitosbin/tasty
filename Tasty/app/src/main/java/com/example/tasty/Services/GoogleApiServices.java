@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 
+import com.example.tasty.Models.PlacesModel;
 import com.example.tasty.R;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.GenericUrl;
@@ -66,6 +68,10 @@ public class GoogleApiServices extends AsyncTask<URL, String, Void> {
 
             HttpRequest request = requestFactory.buildGetRequest(url);
             HttpResponse httpResponse = request.execute();
+            PlacesModel placesModel = httpResponse.parseAs(PlacesModel.class);
+            int  size = placesModel.results.size();
+            size++;
+
 
 
         }catch (Exception ex){
