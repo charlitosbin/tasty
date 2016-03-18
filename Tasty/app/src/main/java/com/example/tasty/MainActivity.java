@@ -25,6 +25,7 @@ import com.example.tasty.Components.RestaurantRvItemClickListener;
 import com.example.tasty.Models.RestaurantModel;
 import com.example.tasty.Services.DirectionServices;
 import com.example.tasty.Services.DummyServices;
+import com.example.tasty.Services.GoogleApiServices;
 import com.example.tasty.Utils.GoogleMapUtis;
 import com.example.tasty.Utils.Util;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -204,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         new DirectionServices(googleMap, "Chicago,IL", "Los Angeles,CA").execute();
 
         if(currentPosition != null) {
+            new GoogleApiServices(this,currentPosition,"tacos").execute();
             restaurantModelList = dummyServices.GetRestaurants("mexican");
             GoogleMapUtis.addMarkers(googleMap, restaurantModelList);
             GoogleMapUtis.addMarkerAndCenterCamera(googleMap, currentPosition, "Aqui estas");

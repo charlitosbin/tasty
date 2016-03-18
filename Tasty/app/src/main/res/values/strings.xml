@@ -10,6 +10,7 @@
     <string name="google_map_id" translatable="false" templateMergeStrategy="preserve">
         AIzaSyBVXQxzoeG-4d-meH991fAmnmokadaJs-c
     </string>
+    <string name="google_api_web">AIzaSyC6w8zwlBdmWAZvZDs84DAMlBzQuLixXXE</string>
 
     <string name="restaurant_name_dummy">La Chata Restaurant</string>
     <string name="restaurant_address_dummy">Av. Corona 126, Centro</string>
