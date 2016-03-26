@@ -1,0 +1,17 @@
+Ejemplo: 1
+
+https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=8.5586,76.8814&radius=500&types=food&sensor=false&key=AIzaSyC6w8zwlBdmWAZvZDs84DAMlBzQuLixXXE
+
+Ejemplo: 2
+
+https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=20.6943136,-103.42099009999998&radius=500&query=Mexican+Restaurant&types=food&sensor=false&key=AIzaSyC6w8zwlBdmWAZvZDs84DAMlBzQuLixXXE
+
+Ejemplo: 3
+https://maps.googleapis.com/maps/api/place/textsearch/json?query=Mexican+Restaurant&sensor=true&location=40.846,-73.938&radius=20&key=AIzaSyC6w8zwlBdmWAZvZDs84DAMlBzQuLixXXE
+
+
+https://maps.googleapis.com/maps/api/place/textsearch/json?query=italian+Restaurant&sensor=true&location=40.846,-73.938&radius=20&key=AIzaSyC6w8zwlBdmWAZvZDs84DAMlBzQuLixXXE
+
+
+Clave Web API
+AIzaSyC6w8zwlBdmWAZvZDs84DAMlBzQuLixXXE
