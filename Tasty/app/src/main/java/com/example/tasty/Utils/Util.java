@@ -92,7 +92,7 @@ public final class Util {
             if(strSplit.length > 3){
                 String[] strZip  = strSplit[2].split(" ");
                 if(strZip.length > 0){
-                    return strSplit[0];
+                    return strZip[1];
                 }
             }
         }
