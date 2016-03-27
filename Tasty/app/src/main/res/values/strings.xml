@@ -19,4 +19,5 @@
     <string name="restaurant_state_dummy">Jalisco</string>
 
     <string name="location_service_error">Necesitas activar los servicios de localizacion.</string>
+    <string name="query_null_error">Necesitas agregar un parametro de busqueda.</string>
 </resources>

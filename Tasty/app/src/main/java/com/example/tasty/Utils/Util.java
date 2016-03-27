@@ -76,6 +76,31 @@ public final class Util {
         return  restaurantModel;
     }
 
+    public static String getRestaurantAddress(String formattedAddress){
+        if(!formattedAddress.isEmpty()) {
+            String[] strSplit = formattedAddress.split(",");
+            if(strSplit.length > 2)
+                return  strSplit[0] +", "+ strSplit[1];
+        }
+
+        return "";
+    }
+
+    public static String getRestaurantZipCode(String formattedAddress){
+        if(!formattedAddress.isEmpty()){
+            String[] strSplit = formattedAddress.split(",");
+            if(strSplit.length > 3){
+                String[] strZip  = strSplit[2].split(" ");
+                if(strZip.length > 0){
+                    return strSplit[0];
+                }
+            }
+        }
+
+        return "";
+    }
+
+
     public static class PolyUtil{
         public static List<LatLng> decode(final String encodedPath) {
             int len = encodedPath.length();
@@ -112,5 +137,6 @@ public final class Util {
 
             return path;
         }
+
     }
 }

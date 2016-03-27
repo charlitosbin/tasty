@@ -2,6 +2,7 @@ package com.example.tasty;
 
 import android.Manifest;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -61,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         void DrawLocation(Location location);
     }
 
+    interface  GoogleApiServicesCallback{
+        void DrawList(Context context, List<RestaurantModel> restaurants);
+    }
+
     public class GoogleGetLocationImplementation implements GoogleGetLocationCallback{
         @Override
         public void DrawLocation(Location location) {
@@ -71,6 +76,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if(location != null) {
                 currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
                 GoogleMapUtis.addMarkerAndCenterCamera(googleMap, currentPosition, "Aqui estas");
+            }
+        }
+    }
+
+    public class GoogleApiServicesImplementation implements  GoogleApiServicesCallback{
+        @Override
+        public void DrawList(Context context,List<RestaurantModel> restaurants){
+            if(restaurants != null && restaurants.size() > 0){
+                if(googleMap != null){
+                    GoogleMapUtis.addMarkers(googleMap, restaurants);
+                    GoogleMapUtis.addMarkerAndCenterCamera(googleMap, currentPosition, "Posicion actual");
+                    adapter = new RestaurantAdapter(restaurants);
+                    restaurantRv.setAdapter(adapter);
+                    restaurantRv.addOnItemTouchListener(
+                            new RestaurantRvItemClickListener(context, new RestaurantRvItemClickListener.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(View view, int position) {
+                                    Log.d("position", "" + position);
+                                }
+                            })
+                    );
+                }
             }
         }
     }
@@ -200,26 +227,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void makeSearch(String query)
     {
-        System.out.println(query);
-        Log.d("Button press", "GPS Press");
-        new DirectionServices(googleMap, "Chicago,IL", "Los Angeles,CA").execute();
+        if(!query.isEmpty()) {
+            System.out.println(query);
+            Log.d("Button press", "GPS Press");
+            //1.0 Este codigo es para trazar la ruta
+            //new DirectionServices(googleMap, "Chicago,IL", "Los Angeles,CA").execute();
 
-        if(currentPosition != null) {
-            new GoogleApiServices(this,currentPosition,"tacos").execute();
-            restaurantModelList = dummyServices.GetRestaurants("mexican");
-            GoogleMapUtis.addMarkers(googleMap, restaurantModelList);
-            GoogleMapUtis.addMarkerAndCenterCamera(googleMap, currentPosition, "Aqui estas");
-            adapter = new RestaurantAdapter(restaurantModelList);
-            restaurantRv.setAdapter(adapter);
-            restaurantRv.addOnItemTouchListener(
-                    new RestaurantRvItemClickListener(this.getBaseContext(), new RestaurantRvItemClickListener.OnItemClickListener(){
-                     @Override
-                    public void onItemClick(View view, int position){
-                         Log.d("position", "" +position);
-                     }})
-            );
+            if (currentPosition != null) {
+                new GoogleApiServices(this, currentPosition, query).execute();
+                restaurantModelList = dummyServices.GetRestaurants("mexican");
+                GoogleMapUtis.addMarkers(googleMap, restaurantModelList);
+                GoogleMapUtis.addMarkerAndCenterCamera(googleMap, currentPosition, "Aqui estas");
+                adapter = new RestaurantAdapter(restaurantModelList);
+                restaurantRv.setAdapter(adapter);
+                restaurantRv.addOnItemTouchListener(
+                        new RestaurantRvItemClickListener(this.getBaseContext(), new RestaurantRvItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Log.d("position", "" + position);
+                            }
+                        })
+                );
+            } else {
+                Snackbar snack = Util.createSnackbar(llMain, getResources().getString(R.string.location_service_error));
+                snack.show();
+            }
         }else{
-            Snackbar snack = Util.createSnackbar(llMain, getResources().getString(R.string.location_service_error));
+            Snackbar snack = Util.createSnackbar(llMain, getResources().getString(R.string.query_null_error));
             snack.show();
         }
     }
