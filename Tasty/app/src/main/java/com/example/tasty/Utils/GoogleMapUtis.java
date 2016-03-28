@@ -85,7 +85,7 @@ public final class GoogleMapUtis {
     }
 
     public  static void centerCamera(GoogleMap googleMap, MarkerOptions marker){
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 10);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 11);
         googleMap.animateCamera(cameraUpdate);
     }
 

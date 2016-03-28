@@ -18,6 +18,7 @@ import android.view.View;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
 import com.example.tasty.Components.GoogleApiCallbacksImplementation;
@@ -52,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleApiCallbacksImplementation mGoogleApliClientImplementation;
     private DummyServices dummyServices;
 
-    private List<RestaurantModel> restaurantModelList;
     private RecyclerView restaurantRv;
     private RestaurantAdapter adapter;
 
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public class GoogleApiServicesImplementation implements  GoogleApiServicesCallback{
         @Override
-        public void DrawList(Context context,List<RestaurantModel> restaurants){
+        public void DrawList(Context context, final List<RestaurantModel> restaurants){
             if(restaurants != null && restaurants.size() > 0){
                 if(googleMap != null){
                     GoogleMapUtis.addMarkers(googleMap, restaurants);
@@ -93,7 +93,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             new RestaurantRvItemClickListener(context, new RestaurantRvItemClickListener.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(View view, int position) {
-                                    Log.d("position", "" + position);
+                                    LatLng destinationPosition = new LatLng(restaurants.get(position).getLatitude(),
+                                            restaurants.get(position).getLongitude());
+
+                                    new DirectionServices(googleMap, destinationPosition, currentPosition).execute();
                                 }
                             })
                     );
@@ -228,26 +231,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void makeSearch(String query)
     {
         if(!query.isEmpty()) {
-            System.out.println(query);
-            Log.d("Button press", "GPS Press");
-            //1.0 Este codigo es para trazar la ruta
-            //new DirectionServices(googleMap, "Chicago,IL", "Los Angeles,CA").execute();
-
+            hideKeyboard();
             if (currentPosition != null) {
-                new GoogleApiServices(this, currentPosition, query).execute();
-                restaurantModelList = dummyServices.GetRestaurants("mexican");
-                GoogleMapUtis.addMarkers(googleMap, restaurantModelList);
-                GoogleMapUtis.addMarkerAndCenterCamera(googleMap, currentPosition, "Aqui estas");
-                adapter = new RestaurantAdapter(restaurantModelList);
-                restaurantRv.setAdapter(adapter);
-                restaurantRv.addOnItemTouchListener(
-                        new RestaurantRvItemClickListener(this.getBaseContext(), new RestaurantRvItemClickListener.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(View view, int position) {
-                                Log.d("position", "" + position);
-                            }
-                        })
-                );
+                GoogleApiServices googleApiServices = new GoogleApiServices(this,currentPosition,query);
+                GoogleApiServicesImplementation googleApiServicesImplementation = new GoogleApiServicesImplementation();
+                googleApiServices.setCallback(googleApiServicesImplementation);
+                googleApiServices.execute();
+
             } else {
                 Snackbar snack = Util.createSnackbar(llMain, getResources().getString(R.string.location_service_error));
                 snack.show();
@@ -262,6 +252,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     {
         if(mGoogleApiClient != null){
             mGoogleApiClient.connect();
+        }
+    }
+
+    private void hideKeyboard(){
+        View view = this.getCurrentFocus();
+        if(view != null){
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromInputMethod(view.getWindowToken(),0);
         }
     }
 }

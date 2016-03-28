@@ -21,7 +21,6 @@ public class RestaurantAdapter  extends RecyclerView.Adapter<RestaurantAdapter.R
 
         TextView restaurantName;
         TextView restaurantAddress;
-        TextView restaurantCountryAddress;
 
         RestaurantViewHolder(View itemView){
             super(itemView);
@@ -32,7 +31,6 @@ public class RestaurantAdapter  extends RecyclerView.Adapter<RestaurantAdapter.R
         private void setVariables(View itemView){
             restaurantName = (TextView)itemView.findViewById(R.id.restaurantNameTextView);
             restaurantAddress = (TextView)itemView.findViewById(R.id.restaurantAddressTextView);
-            restaurantCountryAddress = (TextView)itemView.findViewById(R.id.restaurantCountryTextView);
         }
     }
 
@@ -51,11 +49,9 @@ public class RestaurantAdapter  extends RecyclerView.Adapter<RestaurantAdapter.R
     @Override
     public void onBindViewHolder(RestaurantViewHolder holder, int position) {
         RestaurantModel restaurant = restaurants.get(position);
-        String countryState = restaurant.getCountry() + ", " + restaurant.getState();
 
         holder.restaurantName.setText(restaurant.getName());
-        holder.restaurantAddress.setText(restaurant.getAddress());
-        holder.restaurantCountryAddress.setText(countryState);
+        holder.restaurantAddress.setText(restaurant.getFormattedAddress());
     }
 
     @Override

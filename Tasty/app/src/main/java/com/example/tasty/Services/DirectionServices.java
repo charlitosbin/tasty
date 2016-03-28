@@ -30,8 +30,8 @@ public class DirectionServices extends  AsyncTask<URL, Integer, Void>{
     private static final HttpTransport HTTP_TRANSPORT = AndroidHttp.newCompatibleTransport();
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
-    private String origin;
-    private String destination;
+    private LatLng origin;
+    private LatLng destination;
 
     private GoogleMap googleMap;
     private List<Marker> markers = new ArrayList<Marker>();
@@ -40,7 +40,7 @@ public class DirectionServices extends  AsyncTask<URL, Integer, Void>{
     private List<LatLng> latLngs = new ArrayList<LatLng>();
     private boolean directionsFetched = false;
 
-    public DirectionServices(GoogleMap googleMap, String origin, String destination){
+    public DirectionServices(GoogleMap googleMap, LatLng origin, LatLng destination){
         this.googleMap = googleMap;
         this.origin = origin;
         this.destination = destination;
@@ -67,8 +67,8 @@ public class DirectionServices extends  AsyncTask<URL, Integer, Void>{
             });
 
             GenericUrl url = new GenericUrl(strGnericUrl);
-            url.put("origin",origin);
-            url.put("destination",destination);
+            url.put("origin",origin.latitude+"+"+origin.longitude);
+            url.put("destination",destination.latitude+"+"+origin.longitude);
             url.put("sensor",false);
 
             HttpRequest request = requestFactory.buildGetRequest(url);

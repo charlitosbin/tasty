@@ -100,6 +100,31 @@ public final class Util {
         return "";
     }
 
+    public static String getRestaurantState(String formattedAddress){
+        if(!formattedAddress.isEmpty()){
+            String[] strSplit = formattedAddress.split(",");
+            if(strSplit.length > 3){
+                String[] strState = strSplit[3].split(" ");
+                if(strState.length > 0){
+                    return strState[1];
+                }
+            }
+        }
+
+        return "";
+    }
+
+    public static String getRestaurantCountry(String formattedAddress){
+        if(!formattedAddress.isEmpty()){
+            String[] strSplit = formattedAddress.split(",");
+            if(strSplit.length > 4){
+                return strSplit[4];
+            }
+        }
+
+        return "";
+    }
+
 
     public static class PolyUtil{
         public static List<LatLng> decode(final String encodedPath) {

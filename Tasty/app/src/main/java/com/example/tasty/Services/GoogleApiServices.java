@@ -4,6 +4,8 @@ package com.example.tasty.Services;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.os.Debug;
+import android.util.Log;
 
 import com.example.tasty.MainActivity;
 import com.example.tasty.Models.PlacesModel;
@@ -27,8 +29,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class GoogleApiServices extends AsyncTask<URL, String, Void> {
+public class GoogleApiServices extends AsyncTask<Object, Object, Object> {
 
     private Context context;
     private MainActivity.GoogleApiServicesImplementation callback;
@@ -58,8 +61,11 @@ public class GoogleApiServices extends AsyncTask<URL, String, Void> {
     private String getRestaurantType(){
         return restaurantType;
     }
+
     @Override
-    protected Void doInBackground(URL... params) {
+    protected Object doInBackground(Object... params) {
+        List<RestaurantModel> restaurants = new ArrayList<RestaurantModel>();
+
         try{
             HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(new HttpRequestInitializer() {
 
@@ -73,36 +79,45 @@ public class GoogleApiServices extends AsyncTask<URL, String, Void> {
             url.put("query",getRestaurantType());
             url.put("sensor",false);
             url.put("location",getCoordParam(latLng));
-            url.put("radius",10000);
+            url.put("radius",1000);
             url.put("key", context.getResources().getString(R.string.google_api_web));
 
             HttpRequest request = requestFactory.buildGetRequest(url);
             HttpResponse httpResponse = request.execute();
             PlacesModel placesModel = httpResponse.parseAs(PlacesModel.class);
-            transformPlacesToRestaurants(placesModel);
+            restaurants = transformPlacesToRestaurants(placesModel);
 
         }catch (Exception ex){
             ex.printStackTrace();
         }
 
-        return null;
+        return restaurants;
     }
 
-    private void transformPlacesToRestaurants(PlacesModel placesModel){
-        if(!placesModel.results.isEmpty()){
-            List<RestaurantModel> restaurants = new ArrayList<RestaurantModel>();
-
-            for(int i = 0; i < placesModel.results.size(); i++){
-               PlacesModel.Result result =  placesModel.results.get(i);
-                RestaurantModel restaurant = new RestaurantModel();
-                restaurant.setName(result.name);
-                restaurant.setAddress(Util.getRestaurantAddress(result.formattedAddress));
-                restaurant.setZipCode(Util.getRestaurantZipCode(result.formattedAddress));
-
-                int x = 1+2;
-
-            }
+    @Override
+    protected void onPostExecute(Object result){
+        if(result != null){
+            List<RestaurantModel> lstRestaurant = (List<RestaurantModel>)result;
+            callback.DrawList(context,lstRestaurant);
         }
     }
 
+    private List<RestaurantModel> transformPlacesToRestaurants(PlacesModel placesModel){
+        List<RestaurantModel> restaurants = new ArrayList<RestaurantModel>();
+
+        if(!placesModel.results.isEmpty()){
+            for(int i = 0; i < placesModel.results.size(); i++){
+
+                PlacesModel.Result result =  placesModel.results.get(i);
+                Log.d("Restaurants>>",result.formattedAddress );
+                RestaurantModel restaurant = new RestaurantModel(result.name, result.formattedAddress);
+                restaurant.setLatitude(result.geometry.location.lat);
+                restaurant.setLongitude(result.geometry.location.lng);
+
+                restaurants.add(restaurant);
+            }
+        }
+
+        return restaurants;
+    }
 }

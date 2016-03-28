@@ -10,6 +10,7 @@ public class RestaurantModel {
     private String state;
     private String country;
     private String address;
+    private String formattedAddress;
     private String city;
 
     private EnumRestaurants restaurantType;
@@ -44,6 +45,17 @@ public class RestaurantModel {
         this.state = state;
         this.country = country;
         this.address = address;
+    }
+
+    public RestaurantModel(String name, String formattedAddress){
+        this.name = name;
+        this.formattedAddress = formattedAddress;
+    }
+
+    public String getFormattedAddress() {return formattedAddress;}
+
+    public void setFormattedAddress(String formattedAddress){
+        this.formattedAddress = formattedAddress;
     }
 
     public double getLatitude(){
