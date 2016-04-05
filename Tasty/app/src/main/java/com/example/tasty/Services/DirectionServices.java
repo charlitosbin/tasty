@@ -2,6 +2,8 @@ package com.example.tasty.Services;
 
 
 import android.os.AsyncTask;
+import android.os.Debug;
+import android.util.Log;
 
 import com.example.tasty.Models.DirectionsModel;
 import com.example.tasty.Utils.GoogleMapUtis;
@@ -67,8 +69,10 @@ public class DirectionServices extends  AsyncTask<URL, Integer, Void>{
             });
 
             GenericUrl url = new GenericUrl(strGnericUrl);
-            url.put("origin",origin.latitude+"+"+origin.longitude);
-            url.put("destination",destination.latitude+"+"+origin.longitude);
+            Log.d("url>>", url.toString());
+
+            url.put("origin",origin.latitude+","+origin.longitude);
+            url.put("destination",destination.latitude+","+origin.longitude);
             url.put("sensor",false);
 
             HttpRequest request = requestFactory.buildGetRequest(url);
