@@ -27,24 +27,24 @@ public final class GoogleMapUtis {
 
         for (RestaurantModel restaurant : restaurantModelList){
             LatLng latLng = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
-            MarkerOptions marker = addMarker(googleMap,latLng, restaurant.getName(),false);
+            MarkerOptions marker = addMarker(googleMap,latLng, restaurant.getName(),false,0);
             lstMarkers.add(marker);
         }
     }
 
     public static  void addMarkerAndCenterCamera(GoogleMap googleMap,LatLng position, String title) {
-        MarkerOptions marker = addMarker(googleMap, position,title,true);
+        MarkerOptions marker = addMarker(googleMap, position,title,true, BitmapDescriptorFactory.HUE_BLUE);
 
         centerCamera(googleMap, marker);
     }
 
-    public static MarkerOptions addMarker(GoogleMap googleMap, LatLng latLng, String title, boolean displayTitle){
+    public static MarkerOptions addMarker(GoogleMap googleMap, LatLng latLng, String title, boolean displayTitle, float color){
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title(title);
 
         if(displayTitle){
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(color));
         }
 
         Marker m = googleMap.addMarker(markerOptions);
@@ -102,6 +102,15 @@ public final class GoogleMapUtis {
             options.add(latLng);
         }
         googleMap.addPolyline(options);
+
+        if(latLngs.size() > 1){
+            LatLng origin = latLngs.get(0);
+            LatLng destination = latLngs.get(latLngs.size()-1);
+
+            addMarker(googleMap, origin, "Origen", true, BitmapDescriptorFactory.HUE_BLUE);
+            addMarker(googleMap, destination, "Destino", true, BitmapDescriptorFactory.HUE_RED);
+        }
+
     }
 
     public static void fixZoomForLatLngs(GoogleMap googleMap, List<LatLng> latlngs){

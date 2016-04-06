@@ -42,7 +42,7 @@ public class DirectionServices extends  AsyncTask<URL, Integer, Void>{
     private List<LatLng> latLngs = new ArrayList<LatLng>();
     private boolean directionsFetched = false;
 
-    public DirectionServices(GoogleMap googleMap, LatLng origin, LatLng destination){
+    public DirectionServices(GoogleMap googleMap, LatLng destination, LatLng origin){
         this.googleMap = googleMap;
         this.origin = origin;
         this.destination = destination;
@@ -72,7 +72,7 @@ public class DirectionServices extends  AsyncTask<URL, Integer, Void>{
             Log.d("url>>", url.toString());
 
             url.put("origin",origin.latitude+","+origin.longitude);
-            url.put("destination",destination.latitude+","+origin.longitude);
+            url.put("destination",destination.latitude+","+destination.longitude);
             url.put("sensor",false);
 
             HttpRequest request = requestFactory.buildGetRequest(url);
