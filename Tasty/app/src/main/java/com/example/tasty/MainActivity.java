@@ -28,6 +28,7 @@ import com.example.tasty.Models.RestaurantModel;
 import com.example.tasty.Services.DirectionServices;
 import com.example.tasty.Services.DummyServices;
 import com.example.tasty.Services.GoogleApiServices;
+import com.example.tasty.Utils.DropDownAnim;
 import com.example.tasty.Utils.GoogleMapUtis;
 import com.example.tasty.Utils.Util;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -230,6 +231,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void makeSearch(String query)
     {
+        DropDownAnim a = new DropDownAnim(mapFragment.getView(),1800,false);
+        a.setDuration(500);
+        mapFragment.getView().startAnimation(a);
+
         if(!query.isEmpty()) {
             hideKeyboard();
             if (currentPosition != null) {
