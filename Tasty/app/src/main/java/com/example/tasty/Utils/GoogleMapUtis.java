@@ -107,8 +107,8 @@ public final class GoogleMapUtis {
             LatLng origin = latLngs.get(0);
             LatLng destination = latLngs.get(latLngs.size()-1);
 
-            addMarker(googleMap, origin, "Origen", true, BitmapDescriptorFactory.HUE_BLUE);
             addMarker(googleMap, destination, "Destino", true, BitmapDescriptorFactory.HUE_RED);
+            addMarker(googleMap, origin, "Origen", true, BitmapDescriptorFactory.HUE_BLUE);
         }
 
     }

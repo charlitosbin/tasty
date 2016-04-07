@@ -1,11 +1,15 @@
 package com.example.tasty;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -256,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void activateGeolocation()
     {
         if(mGoogleApiClient != null){
-            mGoogleApiClient.connect();
+            CheckEnableGPS();
         }
     }
 
@@ -264,7 +268,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         View view = this.getCurrentFocus();
         if(view != null){
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromInputMethod(view.getWindowToken(),0);
+            imm.hideSoftInputFromInputMethod(view.getWindowToken(), 0);
         }
+    }
+
+    private void CheckEnableGPS() {
+        String provider = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+
+        if(!provider.equals("")){
+            mGoogleApiClient.connect();
+        }else{
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Enable GPS");  // GPS not found
+            builder.setMessage("The app needs GPS to be enabled do you want to enable it in the settings? "); // Want to enable?
+            builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                }
+            });
+            builder.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    finish();
+                }
+            });
+            builder.setCancelable(false);
+            builder.create().show();
+            return;
+        }
+
+
     }
 }
