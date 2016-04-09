@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
+import com.example.tasty.Activities.ChatActivity;
 import com.example.tasty.Components.GoogleApiCallbacksImplementation;
 import com.example.tasty.Components.RestaurantAdapter;
 import com.example.tasty.Components.RestaurantRvItemClickListener;
@@ -157,13 +158,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if(id == R.id.action_geolocation){
             activateGeolocation();
-        }else if (id == R.id.filter_option_restaurant) {
-            //TODO: When user filter by restaurant
-            searchView.setQueryHint(getResources().getString(R.string.search_by_food));
-            return true;
-        }else if(id == R.id.filter_option_money){
-            //TODO: When user filter by money
-            searchView.setQueryHint(getResources().getString(R.string.search_by_price));
+        }else if (id == R.id.chat_with_friends) {
+            showChatScreen();
             return true;
         }
 
@@ -200,6 +196,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             LinearLayoutManager llm = new LinearLayoutManager(this);
             restaurantRv.setLayoutManager(llm);
         }
+    }
+
+    private void showChatScreen(){
+        Intent chatIntent = new Intent(this, ChatActivity.class);
+        startActivity(chatIntent);
     }
 
     private void setGoogleMap(){

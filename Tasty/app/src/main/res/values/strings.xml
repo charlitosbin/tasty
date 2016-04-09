@@ -3,6 +3,11 @@
     <string name="filter_option_restaurant">Filtrar por comida</string>
     <string name="filter_option_money">Filtrar por precio</string>
 
+    <string name="chat_with_friends">Chat with friends</string>
+    <string name="prompt_message">Mensaje</string>
+    <string name="action_send">Send</string>
+    <string name="send">SEND</string>
+
     <string name="search_by_food">Buscar por comida</string>
     <string name="search_by_price">Buscar por precio</string>
 
