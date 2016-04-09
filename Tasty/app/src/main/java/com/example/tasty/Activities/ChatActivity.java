@@ -16,6 +16,7 @@ public class ChatActivity extends Activity{
 
     private RecyclerView rVMessagesView;
     private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     private List<Message> mMessages = new ArrayList<Message>();
 
@@ -23,8 +24,8 @@ public class ChatActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
 
+        setContentView(R.layout.activity_chat);
         setVariables();
     }
 
@@ -34,7 +35,6 @@ public class ChatActivity extends Activity{
         rVMessagesView.setLayoutManager(new LinearLayoutManager(this));
 
         mAdapter = new MessageAdapter(mMessages);
-
         rVMessagesView.setAdapter(mAdapter);
     }
 
