@@ -25,4 +25,6 @@
 
     <string name="location_service_error">Necesitas activar los servicios de localizacion.</string>
     <string name="query_null_error">Necesitas agregar un parametro de busqueda.</string>
+
+    <string name="server_url">http://192.168.1.67:3000</string>
 </resources>
