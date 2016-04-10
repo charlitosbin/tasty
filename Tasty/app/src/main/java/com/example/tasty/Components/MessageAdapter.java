@@ -56,6 +56,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             if(null == mMessageView) return;
             if(null == message) return;
 
+            mMessageView.setText(message);
+
         }
     }
 }

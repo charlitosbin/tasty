@@ -6,7 +6,12 @@ app.get('/',function (req, res) {
 })
 io.on('connection',function(socket){
 	console.log('one socket connected: '+ socket.id);
-	console.log('hello');
+	socket.on('message',function(data){
+		console.log(data);
+	})
+	socket.on('disconnect',function(){
+		console.log('one user disconnected '+socket.id);
+	})
 })
 http.listen(3000,function(){
 	console.log('server listening on port 3000');
