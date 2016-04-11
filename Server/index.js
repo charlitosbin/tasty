@@ -7,7 +7,13 @@ app.get('/',function (req, res) {
 io.on('connection',function(socket){
 	console.log('one socket connected: '+ socket.id);
 	socket.on('message',function(data){
-		console.log(data);
+		var sockets = io.sockets.sockets;
+		sockets.forEach(function(sock){
+			if(sock.id != socket.id)
+			{
+				sock.emit('message',{message:data});
+			}
+		})
 	})
 	socket.on('disconnect',function(){
 		console.log('one user disconnected '+socket.id);

@@ -13,6 +13,7 @@ import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.example.tasty.Components.MessageAdapter;
 import com.example.tasty.Models.Message;
@@ -48,6 +49,7 @@ public class ChatActivity extends Activity{
 
         setContentView(R.layout.activity_chat);
         socket.connect();
+        socket.on(getResources().getString(R.string.server_message),handleIncomingMessages);
         setVariables();
         addEventHandlers();
 
@@ -99,4 +101,18 @@ public class ChatActivity extends Activity{
     private void scrollToBottom(){
         rVMessagesView.scrollToPosition(mAdapter.getItemCount()-1);
     }
+
+    private Emitter.Listener handleIncomingMessages = new Emitter.Listener(){
+        @Override
+        public void call(final Object... args){
+            JSONObject data = (JSONObject)args[0];
+            String message;
+            try{
+                message = data.getString("text").toString();
+                addMessage(message);
+            }catch (JSONException e){
+                //return;
+            }
+        }
+    };
 }
