@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.example.tasty.Utils.Encryption;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -31,6 +32,8 @@ public class ChatActivity extends Activity{
     private EditText mInputMessageView;
     private ImageButton msendButton;
 
+    private Encryption encryption;
+
     private List<Message> mMessages = new ArrayList<Message>();
 
     private Socket socket;
@@ -47,6 +50,12 @@ public class ChatActivity extends Activity{
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_chat);
+        try {
+            encryption = new Encryption(new byte[16]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         socket.connect();
         socket.on(getResources().getString(R.string.server_message),handleIncomingMessages);
         setVariables();
@@ -84,6 +93,16 @@ public class ChatActivity extends Activity{
     private void sendMessage(){
         String message = mInputMessageView.getText().toString().trim();
         if(message != "") {
+            if(encryption != null){
+                byte[] encrypted = new byte[0];
+                try {
+                    encrypted = encryption.encrypt(message.getBytes("UTF-8"));
+                    byte[] decrypted = encryption.decrypt(encrypted);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
             mInputMessageView.setText("");
             addMessage(message, false);
             socket.emit(getResources().getString(R.string.server_message), message);
