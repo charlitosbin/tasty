@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -98,6 +99,7 @@ public class ChatActivity extends Activity{
                 try {
                     encrypted = encryption.encrypt(message.getBytes("UTF-8"));
                     byte[] decrypted = encryption.decrypt(encrypted);
+                    Log.d("tag>>", new String(decrypted, "UTF-8"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -115,7 +117,6 @@ public class ChatActivity extends Activity{
         mAdapter = new MessageAdapter(mMessages);
         mAdapter.notifyItemInserted(0);
         scrollToBottom();
-
     }
 
     private void scrollToBottom(){
