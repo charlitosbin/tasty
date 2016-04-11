@@ -1,10 +1,14 @@
 package com.example.tasty.Components;
 
 
+import android.os.Debug;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.tasty.Models.Message;
@@ -15,7 +19,6 @@ import java.util.List;
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
     private List<Message> mMessages;
-
 
     public MessageAdapter(List<Message> messages){
         mMessages = messages;
@@ -35,6 +38,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         Message message = mMessages.get(position);
+        viewHolder.setTextSide(message.getRemoteMessage());
         viewHolder.setMessage(message.getMessage());
     }
 
@@ -58,6 +62,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
             mMessageView.setText(message);
 
+        }
+
+        public void setTextSide(boolean remoteMessage){
+            if(remoteMessage){
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                param.gravity = Gravity.RIGHT;
+                mMessageView.setLayoutParams(param);
+                mMessageView.setGravity(Gravity.RIGHT);
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ public class Message {
 
     private int mType;
     private String mMessage;
+    private boolean mRemoteMessage;
 
     private Message(){}
 
@@ -19,17 +20,20 @@ public class Message {
     public String getMessage(){
         return mMessage;
     }
+    public boolean getRemoteMessage(){return mRemoteMessage;}
 
     public static class Builder{
         private final int mType;
         private String mMessage;
+        private boolean mRemoteMessage;
 
         public Builder(int type){
             mType = type;
         }
 
-        public Builder message(String message){
+        public Builder message(String message, boolean remoteMessage){
             mMessage = message;
+            mRemoteMessage = remoteMessage;
             return this;
         }
 
@@ -37,6 +41,7 @@ public class Message {
             Message message = new Message();
             message.mType = mType;
             message.mMessage = mMessage;
+            message.mRemoteMessage = mRemoteMessage;
 
             return message;
         }

@@ -42,7 +42,6 @@ public class ChatActivity extends Activity{
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -84,14 +83,16 @@ public class ChatActivity extends Activity{
 
     private void sendMessage(){
         String message = mInputMessageView.getText().toString().trim();
-        mInputMessageView.setText("");
-        addMessage(message);
-        socket.emit(getResources().getString(R.string.server_message),message);
+        if(message != "") {
+            mInputMessageView.setText("");
+            addMessage(message, false);
+            socket.emit(getResources().getString(R.string.server_message), message);
+        }
     }
 
-    private void addMessage(String message){
+    private void addMessage(String message, boolean remoteMessage){
         mMessages.add(new Message.Builder(Message.TYPE_MESSAGE)
-                .message(message).build());
+                .message(message,remoteMessage).build());
         mAdapter = new MessageAdapter(mMessages);
         mAdapter.notifyItemInserted(0);
         scrollToBottom();
@@ -109,7 +110,7 @@ public class ChatActivity extends Activity{
             String message;
             try{
                 message = data.getString("text").toString();
-                addMessage(message);
+                addMessage(message,true);
             }catch (JSONException e){
                 //return;
             }
