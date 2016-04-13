@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -18,12 +19,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.example.tasty.Activities.ChatActivity;
 import com.example.tasty.Components.GoogleApiCallbacksImplementation;
@@ -159,7 +165,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(id == R.id.action_geolocation){
             activateGeolocation();
         }else if (id == R.id.chat_with_friends) {
-            showChatScreen();
+            //showChatScreen();
+            showPopup();
             return true;
         }
 
@@ -198,8 +205,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void showChatScreen(){
+    private void showChatScreen(String nickname){
         Intent chatIntent = new Intent(this, ChatActivity.class);
+        chatIntent.putExtra("nickname",nickname);
+
         startActivity(chatIntent);
     }
 
@@ -297,7 +306,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             builder.create().show();
             return;
         }
+    }
 
+    private void showPopup(){
 
+        LinearLayout viewGroup = (LinearLayout)findViewById(R.id.popup);
+        LayoutInflater layoutInflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        View layout = layoutInflater.inflate(R.layout.name_popup,viewGroup);
+
+        final PopupWindow popup = new PopupWindow(this);
+        popup.setContentView(layout);
+        popup.setFocusable(true);
+
+        popup.showAtLocation(layout, Gravity.CENTER, 0, 0);
+
+        Button submit = (Button)layout.findViewById(R.id.nickanmeButton);
+        final TextView nicknameInput = (TextView)layout.findViewById(R.id.nicknameInput);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popup.dismiss();
+                showChatScreen(nicknameInput.getText().toString());
+            }
+        });
     }
 }

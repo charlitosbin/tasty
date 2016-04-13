@@ -1,6 +1,7 @@
 package com.example.tasty.Activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,13 +35,16 @@ public class ChatActivity extends Activity{
     private ImageButton msendButton;
 
     private Encryption encryption;
+    private String ipAddress = "http://192.168.1.67:3000";
+    private String ipAddress2 = "http://192.168.0.101:3000";
 
     private List<Message> mMessages = new ArrayList<Message>();
+    private String nickname;
 
     private Socket socket;
     {
         try{
-            socket = IO.socket("http://192.168.1.67:3000");
+            socket = IO.socket(ipAddress2);
         }catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -49,8 +53,10 @@ public class ChatActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_chat);
+        Intent intent = getIntent();
+        nickname = intent.getExtras().getString(getResources().getString(R.string.nickname_id));
+
         try {
             encryption = new Encryption(new byte[16]);
         } catch (Exception e) {
@@ -93,6 +99,7 @@ public class ChatActivity extends Activity{
 
     private void sendMessage(){
         String message = mInputMessageView.getText().toString().trim();
+        message = nickname+": "+message;
         if(message != "") {
             if(encryption != null){
                 byte[] encrypted = new byte[0];
