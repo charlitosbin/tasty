@@ -31,4 +31,5 @@
     <string name="server_message">message</string>
     <string name="nickname_request">Que nickname deseas utilizar?</string>
     <string name="nickname_id">nickname</string>
+    <string name="restaurant_id">restaurant_name</string>
 </resources>

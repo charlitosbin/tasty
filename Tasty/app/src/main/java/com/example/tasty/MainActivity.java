@@ -210,7 +210,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void showChatScreen(String nickname){
         if(restaurantSelected != "") {
             Intent chatIntent = new Intent(this, ChatActivity.class);
-            chatIntent.putExtra("nickname", nickname);
+            chatIntent.putExtra(getResources().getString(R.string.nickname_id), nickname);
+            chatIntent.putExtra(getResources().getString(R.string.restaurant_id), restaurantSelected);
 
             startActivity(chatIntent);
         }else{

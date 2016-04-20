@@ -61,6 +61,7 @@ public class ChatActivity extends Activity{
         setContentView(R.layout.activity_chat);
         Intent intent = getIntent();
         nickname = intent.getExtras().getString(getResources().getString(R.string.nickname_id));
+        restaurantName = intent.getExtras().getString(getResources().getString(R.string.restaurant_id));
 
         try {
             encryption = new Encryption(new byte[16]);
@@ -68,7 +69,8 @@ public class ChatActivity extends Activity{
             e.printStackTrace();
         }
         socket.connect();
-        socket.emit("init_client", "client," + Util.getDeviceId(this));
+        socket.emit("init_client", "restaurant_name:"+ restaurantName +","
+                +"client:" + Util.getDeviceId(this));
         socket.on(getResources().getString(R.string.server_message), handleIncomingMessages);
 
         setVariables();
