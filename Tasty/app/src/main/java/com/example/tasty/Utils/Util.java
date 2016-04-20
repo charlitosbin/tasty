@@ -2,6 +2,7 @@ package com.example.tasty.Utils;
 
 
 import android.location.Geocoder;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.widget.LinearLayout;
 import android.content.Context;
@@ -164,5 +165,9 @@ public final class Util {
         }
     }
 
+    public static String getDeviceId(Context context){
 
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+    }
 }

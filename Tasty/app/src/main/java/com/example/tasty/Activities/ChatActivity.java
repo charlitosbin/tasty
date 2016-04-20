@@ -3,6 +3,7 @@ package com.example.tasty.Activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.tasty.Utils.Encryption;
+import com.example.tasty.Utils.Util;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -35,8 +37,10 @@ public class ChatActivity extends Activity{
     private ImageButton msendButton;
 
     private Encryption encryption;
+    //22
     private String ipAddress = "http://192.168.1.67:3000";
     private String ipAddress2 = "http://192.168.0.101:3000";
+    private String ipRestaurant = "";
 
     private List<Message> mMessages = new ArrayList<Message>();
     private String nickname;
@@ -44,7 +48,7 @@ public class ChatActivity extends Activity{
     private Socket socket;
     {
         try{
-            socket = IO.socket(ipAddress2);
+            socket = IO.socket(ipAddress);
         }catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -56,6 +60,7 @@ public class ChatActivity extends Activity{
         setContentView(R.layout.activity_chat);
         Intent intent = getIntent();
         nickname = intent.getExtras().getString(getResources().getString(R.string.nickname_id));
+        socket.emit("init","client,"+Util.getDeviceId(this));
 
         try {
             encryption = new Encryption(new byte[16]);
@@ -98,6 +103,7 @@ public class ChatActivity extends Activity{
     }
 
     private void sendMessage(){
+        Log.d("ANDROID_ID>>>>", Util.getDeviceId(this));
         String message = mInputMessageView.getText().toString().trim();
         message = nickname+": "+message;
         if(message != "") {
@@ -134,12 +140,17 @@ public class ChatActivity extends Activity{
         @Override
         public void call(final Object... args){
             JSONObject data = (JSONObject)args[0];
-            String message;
+            final String message;
             try{
-                message = data.getString("text").toString();
-                addMessage(message,true);
+                message = data.getString("message").toString();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        addMessage(message, true);
+                    }
+                });
             }catch (JSONException e){
-                //return;
+                e.printStackTrace();
             }
         }
     };

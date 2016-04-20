@@ -165,8 +165,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(id == R.id.action_geolocation){
             activateGeolocation();
         }else if (id == R.id.chat_with_friends) {
-            //showChatScreen();
-            showPopup();
+            showChatScreen("Carlos");
+            //showPopup();
             return true;
         }
 
