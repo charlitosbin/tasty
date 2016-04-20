@@ -13,17 +13,17 @@ app.get('/',function (req, res) {
 io.on('connection',function(socket){
 	
 	socket.on("init_client",function(androidId){
-		idClientIpAddress[socket.id] = socket.request.connection.remoteAddress;
 		console.log("init_client>>>");
-		console.log(androidId);
+		addObjectToClientIpAddress(androidId, socket);
 		prettyJSON(idClientIpAddress);
 	})
 
 	socket.on("init_restaurant",function(androidId){
-		idRestaurantIpAddress[socket.id] = socket.request.connection.remoteAddress;
 		console.log("init_restaurant>>>");
-		console.log(androidId);
+		addObjectToRestaurantIpAddress(androidId, socket);
+		var clientIpAddress = addClientToRestaurant(socket);
 		prettyJSON(idRestaurantIpAddress);
+		socket.emit('client',{"client": clientIpAddress});
 	})
 
 	socket.on('message',function(data){
@@ -50,4 +50,41 @@ http.listen(3000,function(){
 
 function prettyJSON(obj) {
     console.log(util.inspect(obj, false, null));
+}
+
+function addObjectToClientIpAddress(data, socket){
+	var restaurantNameClientId = data.split(",");
+	var restaurantName = restaurantNameClientId[0].split(":")[1];
+	var clientId = restaurantNameClientId[1].split(":")[1];
+	idClientIpAddress[socket.id] = 
+	{
+		restaurantName :restaurantName,
+		clientId : clientId,
+	 	ipAddress : socket.request.connection.remoteAddress,
+	 	isFree : true
+	};
+}
+
+function addObjectToRestaurantIpAddress(data,socket){
+	idRestaurantIpAddress[socket.id] = 
+	{
+		restaurantId : data,
+		ipAddress : socket.request.connection.remoteAddress,
+		ipClientAddress : "",
+		restaurantName : "",
+		isFree : true
+	};
+}
+
+function addClientToRestaurant(socket){
+	for(var client in idClientIpAddress){
+		if(idClientIpAddress[client].isFree){
+			idRestaurantIpAddress[socket.id].ipClientAddress = idClientIpAddress[client].ipAddress;
+			idRestaurantIpAddress[socket.id].isFree = false;
+
+			return idClientIpAddress[client].ipAddress;
+		}
+	}
+
+	return "";
 }

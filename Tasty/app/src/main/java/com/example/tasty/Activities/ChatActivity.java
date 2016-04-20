@@ -3,7 +3,6 @@ package com.example.tasty.Activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -46,10 +45,10 @@ public class ChatActivity extends Activity{
     private String nickname;
     private String restaurantName;
 
-    private Socket socket;
+    private Socket serverSocket;
     {
         try{
-            socket = IO.socket(ipAddress2);
+            serverSocket = IO.socket(ipAddress2);
         }catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -68,10 +67,10 @@ public class ChatActivity extends Activity{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        socket.connect();
-        socket.emit("init_client", "restaurant_name:"+ restaurantName +","
-                +"client:" + Util.getDeviceId(this));
-        socket.on(getResources().getString(R.string.server_message), handleIncomingMessages);
+        serverSocket.connect();
+        serverSocket.emit("init_client", "restaurant_name:" + restaurantName + ","
+                + "client:" + Util.getDeviceId(this));
+        serverSocket.on(getResources().getString(R.string.server_message), handleIncomingMessages);
 
         setVariables();
         addEventHandlers();
@@ -81,7 +80,7 @@ public class ChatActivity extends Activity{
     @Override
     public void onDestroy(){
         super.onDestroy();
-        socket.disconnect();
+        serverSocket.disconnect();
     }
 
     private void addEventHandlers(){
@@ -123,7 +122,7 @@ public class ChatActivity extends Activity{
 
             mInputMessageView.setText("");
             addMessage(message, false);
-            socket.emit(getResources().getString(R.string.server_message), message);
+            serverSocket.emit(getResources().getString(R.string.server_message), message);
         }
     }
 

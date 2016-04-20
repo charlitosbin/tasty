@@ -24,7 +24,6 @@ import com.example.restaurantui.Models.Message;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class MainActivity extends Activity {
 
@@ -35,15 +34,16 @@ public class MainActivity extends Activity {
     private ImageButton msendButton;
 
     private String ipAddress2 = "http://192.168.0.107:3000";
+    private String clientIpAddress = "";
 
     private String nickname;
 
     private List<Message> mMessages = new ArrayList<Message>();
 
-    private Socket socket;
+    private Socket serverSocket;
     {
         try{
-            socket = IO.socket(ipAddress2);
+            serverSocket = IO.socket(ipAddress2);
         }catch (URISyntaxException e){
             throw  new RuntimeException(e);
         }
@@ -54,9 +54,11 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        socket.connect();
-        socket.emit("init_restaurant", "restaurant," + Util.getDeviceId(this));
-        socket.on("message", handleIncomingMessages);
+        serverSocket.connect();
+        serverSocket.emit("init_restaurant", Util.getDeviceId(this));
+        serverSocket.on("client", handleIncomingClients);
+        serverSocket.on("message", handleIncomingMessages);
+
         setVariables();
         addEventHandlers();
     }
@@ -91,7 +93,7 @@ public class MainActivity extends Activity {
 
             mInputMessageView.setText("");
             addMessage(message, false);
-            socket.emit("message", message);
+            serverSocket.emit("message", message);
         }
     }
 
@@ -118,6 +120,18 @@ public class MainActivity extends Activity {
                         addMessage(message, true);
                     }
                 });
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+        }
+    };
+
+    private Emitter.Listener handleIncomingClients = new Emitter.Listener(){
+        @Override
+        public void call(final Object... args){
+            JSONObject data = (JSONObject)args[0];
+            try{
+                clientIpAddress = data.getString("client").toString();
             }catch (JSONException e){
                 e.printStackTrace();
             }
