@@ -63,10 +63,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private SearchView searchView;
     private GoogleApiClient mGoogleApiClient;
     private GoogleApiCallbacksImplementation mGoogleApliClientImplementation;
-    private DummyServices dummyServices;
 
     private RecyclerView restaurantRv;
     private RestaurantAdapter adapter;
+
+    private String restaurantSelected = "";
 
     private LatLng currentPosition;
 
@@ -101,10 +102,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     GoogleMapUtis.addMarkerAndCenterCamera(googleMap, currentPosition, "Posicion actual");
                     adapter = new RestaurantAdapter(restaurants);
                     restaurantRv.setAdapter(adapter);
+
                     restaurantRv.addOnItemTouchListener(
                             new RestaurantRvItemClickListener(context, new RestaurantRvItemClickListener.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(View view, int position) {
+                                    restaurantSelected = restaurants.get(position).getName();
                                     LatLng destinationPosition = new LatLng(restaurants.get(position).getLatitude(),
                                             restaurants.get(position).getLongitude());
 
@@ -124,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setVariables();
         setRecyclerViewProperties();
 
-        this.dummyServices = new DummyServices();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -206,10 +208,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void showChatScreen(String nickname){
-        Intent chatIntent = new Intent(this, ChatActivity.class);
-        chatIntent.putExtra("nickname",nickname);
+        if(restaurantSelected != "") {
+            Intent chatIntent = new Intent(this, ChatActivity.class);
+            chatIntent.putExtra("nickname", nickname);
 
-        startActivity(chatIntent);
+            startActivity(chatIntent);
+        }else{
+            Snackbar snack = Util.createSnackbar(llMain, getResources().getString(R.string.no_restaurant_selected));
+            snack.show();
+        }
     }
 
     private void setGoogleMap(){

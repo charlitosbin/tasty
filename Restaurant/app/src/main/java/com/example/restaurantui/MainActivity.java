@@ -58,6 +58,7 @@ public class MainActivity extends Activity {
         socket.emit("init_restaurant", "restaurant," + Util.getDeviceId(this));
         socket.on("message", handleIncomingMessages);
         setVariables();
+        addEventHandlers();
     }
 
     private void setVariables(){

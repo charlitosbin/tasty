@@ -4,8 +4,10 @@ package com.example.tasty.Components;
 import android.os.Debug;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -40,6 +42,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Message message = mMessages.get(position);
         viewHolder.setTextSide(message.getRemoteMessage());
         viewHolder.setMessage(message.getMessage());
+
     }
 
     @Override
@@ -64,8 +67,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         }
 
-        public void setTextSide(boolean remoteMessage){
-            if(remoteMessage){
+        public void setTextSide(boolean remoteMessage) {
+            if (remoteMessage) {
                 LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);

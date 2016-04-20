@@ -4,6 +4,7 @@ var io = require('socket.io')(http);
 var util = require("util");
 
 var idClientIpAddress = {}; 
+var idRestaurantIpAddress = {};
 
 app.get('/',function (req, res) {
 	res.sendFile(__dirname+'/index.html');
@@ -18,6 +19,13 @@ io.on('connection',function(socket){
 		prettyJSON(idClientIpAddress);
 	})
 
+	socket.on("init_restaurant",function(androidId){
+		idRestaurantIpAddress[socket.id] = socket.request.connection.remoteAddress;
+		console.log("init_restaurant>>>");
+		console.log(androidId);
+		prettyJSON(idRestaurantIpAddress);
+	})
+
 	socket.on('message',function(data){
 		var sockets = io.sockets.sockets;
 		sockets.forEach(function(sock){
@@ -30,7 +38,9 @@ io.on('connection',function(socket){
 	socket.on('disconnect',function(){
 		console.log('one user disconnected '+socket.id);
 		delete(idClientIpAddress[socket.id]);
+		delete(idRestaurantIpAddress[socket.id]);
 		prettyJSON(idClientIpAddress);
+		prettyJSON(idRestaurantIpAddress);
 	})
 })
 

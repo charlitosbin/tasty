@@ -44,6 +44,7 @@ public class ChatActivity extends Activity{
 
     private List<Message> mMessages = new ArrayList<Message>();
     private String nickname;
+    private String restaurantName;
 
     private Socket socket;
     {
