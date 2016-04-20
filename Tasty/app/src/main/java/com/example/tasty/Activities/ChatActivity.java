@@ -38,8 +38,8 @@ public class ChatActivity extends Activity{
 
     private Encryption encryption;
     //22
-    private String ipAddress = "http://192.168.1.67:3000";
-    private String ipAddress2 = "http://192.168.0.101:3000";
+   // private String ipAddress = "http://192.168.1.67:3000";
+    private String ipAddress2 = "http://192.168.0.107:3000";
     private String ipRestaurant = "";
 
     private List<Message> mMessages = new ArrayList<Message>();
@@ -48,7 +48,7 @@ public class ChatActivity extends Activity{
     private Socket socket;
     {
         try{
-            socket = IO.socket(ipAddress);
+            socket = IO.socket(ipAddress2);
         }catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -60,16 +60,16 @@ public class ChatActivity extends Activity{
         setContentView(R.layout.activity_chat);
         Intent intent = getIntent();
         nickname = intent.getExtras().getString(getResources().getString(R.string.nickname_id));
-        socket.emit("init","client,"+Util.getDeviceId(this));
 
         try {
             encryption = new Encryption(new byte[16]);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         socket.connect();
-        socket.on(getResources().getString(R.string.server_message),handleIncomingMessages);
+        socket.emit("init_client", "client," + Util.getDeviceId(this));
+        socket.on(getResources().getString(R.string.server_message), handleIncomingMessages);
+
         setVariables();
         addEventHandlers();
 
@@ -105,8 +105,8 @@ public class ChatActivity extends Activity{
     private void sendMessage(){
         Log.d("ANDROID_ID>>>>", Util.getDeviceId(this));
         String message = mInputMessageView.getText().toString().trim();
-        message = nickname+": "+message;
         if(message != "") {
+            message = nickname+": "+message;
             if(encryption != null){
                 byte[] encrypted = new byte[0];
                 try {
