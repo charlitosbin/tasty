@@ -47,14 +47,52 @@ io.on('connection',function(socket){
 
 	socket.on('disconnect',function(){
 		console.log('one user disconnected '+socket.id);
-		delete(idClientIpAddress[socket.id]);
-		delete(idRestaurantIpAddress[socket.id]);
+
+		var restaurant = idRestaurantIpAddress[socket.id];
+		var client = idClientIpAddress[socket.id];
+		
+		if(typeof client !== 'undefined'){
+			console.log("client");
+			var restaurantSocketId = removeRestaurantFromClient(socket.id);
+			sendRestaurantConfirmation(restaurantSocketId);
+
+		}
+		if(typeof restaurant !== 'undefined'){
+			console.log('restaurant');
+			var clientSocketId = removeClientFromRestaurant(socket.id);
+			sendClientConfirmation(clientSocketId);
+		}
+
+		delete idRestaurantIpAddress[socket.id];
+		delete idClientIpAddress[socket.id];
+
+		prettyJSON(idClientIpAddress);
+		prettyJSON(idRestaurantIpAddress);
 	})
 })
 
 http.listen(3000,function(){
 	console.log('server listening on port 3000');
 });
+
+
+function sendRestaurantConfirmation(sockets, restaurantSocketId){
+	sockets.forEach(function(sock){
+			if(sock.id == restaurantSocketId){
+				console.log("confirmacion>>>" +  restaurantSocketId);
+				sock.emit('client_logout',{"client_logout" : getIpAddressFromSocket(sock)});
+			}
+		})
+}
+
+function sendClientConfirmation(sockets, clientSocketId){
+	sockets.forEach(funciton(sock){
+		if(sock.id == clientSocketId){
+			console.log("confirmacion>>>" + clientSocketId);
+			sock.emit("restaurant_logout", {"restaurant_logout" : getIpAddressFromSocket(sock)});
+		}
+	})
+}
 
 function addObjectToClientIpAddress(data, socket){
 	var restaurantNameClientId = data.split(",");
@@ -82,6 +120,33 @@ function addObjectToRestaurantIpAddress(data,socket){
 		restaurantName : "",
 		isFree : true
 	};
+}
+
+function removeRestaurantFromClient(clientSocketId){
+
+	var client = idClientIpAddress[clientSocketId];
+	var restaurant = idRestaurantIpAddress[client.restaurantSocketId];
+
+	restaurant.clientSocketId = "";
+	restaurant.ipClientAddress = "";
+	restaurant.restaurantName = "";
+	restaurant.isFree = true;
+
+	return resaurant.restaurantSocketId;
+
+}
+
+
+function removeClientFromRestaurant(restaurantSocketId){
+	var restaurant = idRestaurantIpAddress[restaurantSocketId];
+	var client = idClientIpAddress[restaurant.clientSocketId];
+
+	client.restaurantSocketId = "";
+	client.restaurantName = "";
+	client.restaurantIpAddress = "";
+	client.isFree = true;
+
+	return client.clientSocketId;
 }
 
 function addRestaurantToClient(clientSocket){
