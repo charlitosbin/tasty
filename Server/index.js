@@ -23,7 +23,6 @@ io.on('connection',function(socket){
 		var sockets = io.sockets.sockets;
 		sockets.forEach(function(sock){
 			if(sock.id == client.restaurantSocketId){
-				console.log("entroo " +  client.restaurantSocketId);
 				sock.emit('client',{"client" : client.ipAddress+","+restaurant.restaurantName});
 			}
 		})
@@ -50,24 +49,26 @@ io.on('connection',function(socket){
 
 		var restaurant = idRestaurantIpAddress[socket.id];
 		var client = idClientIpAddress[socket.id];
+		var sockets = io.sockets.sockets;
 		
 		if(typeof client !== 'undefined'){
 			console.log("client");
-			var restaurantSocketId = removeRestaurantFromClient(socket.id);
-			sendRestaurantConfirmation(restaurantSocketId);
+			console.log("hola " + client.clientSocketId);
+			var restaurantSocketId = removeRestaurantFromClient(client.clientSocketId);
+			console.log(restaurantSocketId);
+			sendRestaurantConfirmation(sockets, restaurantSocketId);
 
 		}
+
 		if(typeof restaurant !== 'undefined'){
 			console.log('restaurant');
 			var clientSocketId = removeClientFromRestaurant(socket.id);
-			sendClientConfirmation(clientSocketId);
+			console.log(clientSocketId);
+			sendClientConfirmation(sockets, clientSocketId);
 		}
 
 		delete idRestaurantIpAddress[socket.id];
 		delete idClientIpAddress[socket.id];
-
-		prettyJSON(idClientIpAddress);
-		prettyJSON(idRestaurantIpAddress);
 	})
 })
 
@@ -77,6 +78,7 @@ http.listen(3000,function(){
 
 
 function sendRestaurantConfirmation(sockets, restaurantSocketId){
+	console.log("entro a confirmacion");
 	sockets.forEach(function(sock){
 			if(sock.id == restaurantSocketId){
 				console.log("confirmacion>>>" +  restaurantSocketId);
@@ -86,7 +88,8 @@ function sendRestaurantConfirmation(sockets, restaurantSocketId){
 }
 
 function sendClientConfirmation(sockets, clientSocketId){
-	sockets.forEach(funciton(sock){
+	console.log("entro a confirmacion");
+	sockets.forEach(function(sock){
 		if(sock.id == clientSocketId){
 			console.log("confirmacion>>>" + clientSocketId);
 			sock.emit("restaurant_logout", {"restaurant_logout" : getIpAddressFromSocket(sock)});
@@ -100,6 +103,7 @@ function addObjectToClientIpAddress(data, socket){
 	var clientId = restaurantNameClientId[1].split(":")[1];
 	idClientIpAddress[socket.id] = 
 	{
+		clientSocketId : socket.id,
 		restaurantSocketId : "",
 		restaurantName :restaurantName,
 		clientId : clientId,
@@ -123,21 +127,23 @@ function addObjectToRestaurantIpAddress(data,socket){
 }
 
 function removeRestaurantFromClient(clientSocketId){
-
+	console.log("clientSocketId >>>> " + clientSocketId);
 	var client = idClientIpAddress[clientSocketId];
-	var restaurant = idRestaurantIpAddress[client.restaurantSocketId];
 
+	var restaurant = idRestaurantIpAddress[client.restaurantSocketId];
+	console.log("rs>>> " + restaurant.restaurantSocketId);
 	restaurant.clientSocketId = "";
 	restaurant.ipClientAddress = "";
 	restaurant.restaurantName = "";
 	restaurant.isFree = true;
 
-	return resaurant.restaurantSocketId;
+	return restaurant.restaurantSocketId;
 
 }
 
 
 function removeClientFromRestaurant(restaurantSocketId){
+	console.log("restaurantSocketId" + restaurantSocketId);
 	var restaurant = idRestaurantIpAddress[restaurantSocketId];
 	var client = idClientIpAddress[restaurant.clientSocketId];
 
