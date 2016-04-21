@@ -45,6 +45,7 @@ public class ChatActivity extends Activity{
     private String nickname;
     private String restaurantName;
 
+    private Socket restaurantSocket;
     private Socket serverSocket;
     {
         try{
@@ -71,6 +72,7 @@ public class ChatActivity extends Activity{
         serverSocket.emit("init_client", "restaurant_name:" + restaurantName + ","
                 + "client:" + Util.getDeviceId(this));
         serverSocket.on(getResources().getString(R.string.server_message), handleIncomingMessages);
+        serverSocket.on("restaurant", handleIncomingRestaurants);
 
         setVariables();
         addEventHandlers();
@@ -122,6 +124,9 @@ public class ChatActivity extends Activity{
 
             mInputMessageView.setText("");
             addMessage(message, false);
+            //if(restaurantSocket != null){
+              //restaurantSocket.emit("message",message);
+           // }
             serverSocket.emit(getResources().getString(R.string.server_message), message);
         }
     }
@@ -151,6 +156,31 @@ public class ChatActivity extends Activity{
                         addMessage(message, true);
                     }
                 });
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+        }
+    };
+
+    private Emitter.Listener handleIncomingRestaurants = new Emitter.Listener(){
+        @Override
+        public void call(final Object... args){
+            JSONObject data = (JSONObject)args[0];
+            try{
+                ipRestaurant = data.getString("restaurant").toString();
+                if(ipRestaurant != null || ipRestaurant != "") {
+                    ipRestaurant = "http://" + ipRestaurant + ":3000";
+                    Log.d("restaurantIp>>>", ipRestaurant);
+                   // try{
+                     //   restaurantSocket = IO.socket(ipRestaurant);
+                       // restaurantSocket.connect();
+                       // restaurantSocket.on("message", handleIncomingMessages);
+
+                        //restaurantSocket.emit("message","hola amigo");
+                 //   }catch (URISyntaxException e){
+                   //     throw  new RuntimeException(e);
+                    //}
+                }
             }catch (JSONException e){
                 e.printStackTrace();
             }

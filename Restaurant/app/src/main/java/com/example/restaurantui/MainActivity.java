@@ -40,6 +40,8 @@ public class MainActivity extends Activity {
 
     private List<Message> mMessages = new ArrayList<Message>();
 
+    private Socket clientSocket;
+
     private Socket serverSocket;
     {
         try{
@@ -61,6 +63,12 @@ public class MainActivity extends Activity {
 
         setVariables();
         addEventHandlers();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        serverSocket.disconnect();
     }
 
     private void setVariables(){
@@ -93,6 +101,10 @@ public class MainActivity extends Activity {
 
             mInputMessageView.setText("");
             addMessage(message, false);
+
+            //if(clientSocket != null){
+            //    clientSocket.emit("message", message);
+           // }
             serverSocket.emit("message", message);
         }
     }
@@ -131,7 +143,24 @@ public class MainActivity extends Activity {
         public void call(final Object... args){
             JSONObject data = (JSONObject)args[0];
             try{
-                clientIpAddress = data.getString("client").toString();
+                String ipAndNickName = data.getString("client").toString();
+                clientIpAddress = ipAndNickName.split(",")[0];
+                nickname = ipAndNickName.split(",")[1];
+
+                if(clientIpAddress != null || clientIpAddress != ""){
+                    clientIpAddress = "http://"+ clientIpAddress +":3000";
+                    Log.d("restaurantIp>>>", clientIpAddress);
+                    Log.d("restaurantName>>>>>>", nickname);
+                   // try{
+                   //     clientSocket = IO.socket(clientIpAddress);
+                   //     clientSocket.connect();
+                   //     clientSocket.on("message", handleIncomingMessages);
+
+                       // clientSocket.emit("message", "hola compadre");
+                    //}catch (URISyntaxException e){
+                    //    throw  new RuntimeException(e);
+                   // }
+                }
             }catch (JSONException e){
                 e.printStackTrace();
             }
