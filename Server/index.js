@@ -41,7 +41,18 @@ io.on('connection',function(socket){
 
 	socket.on('message',function(data){
 		var sockets = io.sockets.sockets;
-		console.log("sendingMessage>>>");
+		var isRestaurant = isRestaurant(socket.id);
+
+		if(isRestaurant){
+			console.log("Restaurant sending message >>>");
+			var toSocket = idRestaurantIpAddress[socket.id].clientSocketId;
+			sendingMessage(data,sockets, toSocket);
+		}else{
+			console.log("Client sending message >>>");
+			var toSocket = idClientIpAddress[socket.id].restaurantSocketId;
+			sendingMessage(data, sockets, toSocket);
+		}
+		
 	})
 
 	socket.on('disconnect',function(){
@@ -49,9 +60,11 @@ io.on('connection',function(socket){
 
 		var restaurant = idRestaurantIpAddress[socket.id];
 		var client = idClientIpAddress[socket.id];
+		var isRestaurant = isRestaurant(socket.id);
+
 		var sockets = io.sockets.sockets;
 		
-		if(typeof client !== 'undefined'){
+		if(!isRestaurant){
 			console.log("client");
 			console.log("hola " + client.clientSocketId);
 			var restaurantSocketId = removeRestaurantFromClient(client.clientSocketId);
@@ -60,7 +73,7 @@ io.on('connection',function(socket){
 
 		}
 
-		if(typeof restaurant !== 'undefined'){
+		if(isRestaurant){
 			console.log('restaurant');
 			var clientSocketId = removeClientFromRestaurant(socket.id);
 			console.log(clientSocketId);
@@ -75,6 +88,32 @@ io.on('connection',function(socket){
 http.listen(3000,function(){
 	console.log('server listening on port 3000');
 });
+
+
+function sendingMessage(data, sockets, socketId){
+	sockets.forEach(function(sock){
+		if(sock.id === socket.id){
+			sock.emit('message',{message:data});
+			return;
+		}
+	});
+}
+
+
+function isRestaurant(socketId){
+	var result = false;
+
+	var restaurant =idRestaurantIpAddress[socket.id];
+	var client = idClientIpAddress[socket.id];
+
+	if(typeof client !== 'undefined')
+		result = false;
+	else if(typeof restaurant !== 'undefined')
+		result = true;
+
+	return result;
+}
+
 
 
 function sendRestaurantConfirmation(sockets, restaurantSocketId){

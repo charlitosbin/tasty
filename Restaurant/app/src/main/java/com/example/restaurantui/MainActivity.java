@@ -33,7 +33,8 @@ public class MainActivity extends Activity {
     private EditText mInputMessageView;
     private ImageButton msendButton;
 
-    private String ipAddress2 = "http://192.168.0.107:3000";
+    private String ipAddress = "http://192.168.1.67:3000";
+    //private String ipAddress = "http://192.168.0.107:3000";
     private String clientIpAddress = "";
 
     private String nickname;
@@ -45,7 +46,7 @@ public class MainActivity extends Activity {
     private Socket serverSocket;
     {
         try{
-            serverSocket = IO.socket(ipAddress2);
+            serverSocket = IO.socket(ipAddress);
         }catch (URISyntaxException e){
             throw  new RuntimeException(e);
         }
