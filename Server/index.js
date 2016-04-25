@@ -41,7 +41,7 @@ io.on('connection',function(socket){
 
 	socket.on('message',function(data){
 		var sockets = io.sockets.sockets;
-		var isRestaurant = isRestaurant(socket.id);
+		var isRestaurant = isSocketRestaurant(socket.id);
 
 		if(isRestaurant){
 			console.log("Restaurant sending message >>>");
@@ -60,24 +60,28 @@ io.on('connection',function(socket){
 
 		var restaurant = idRestaurantIpAddress[socket.id];
 		var client = idClientIpAddress[socket.id];
-		var isRestaurant = isRestaurant(socket.id);
+		var isRestaurant = isSocketRestaurant(socket.id);
 
 		var sockets = io.sockets.sockets;
 		
-		if(!isRestaurant){
-			console.log("client");
-			console.log("hola " + client.clientSocketId);
-			var restaurantSocketId = removeRestaurantFromClient(client.clientSocketId);
-			console.log(restaurantSocketId);
-			sendRestaurantConfirmation(sockets, restaurantSocketId);
+		try{
+			if(!isRestaurant){
+				console.log("client");
+				console.log("hola " + client.clientSocketId);
+				var restaurantSocketId = removeRestaurantFromClient(client.clientSocketId);
+				console.log(restaurantSocketId);
+				sendRestaurantConfirmation(sockets, restaurantSocketId);
 
-		}
+			}
 
-		if(isRestaurant){
-			console.log('restaurant');
-			var clientSocketId = removeClientFromRestaurant(socket.id);
-			console.log(clientSocketId);
-			sendClientConfirmation(sockets, clientSocketId);
+			if(isRestaurant){
+				console.log('restaurant');
+				var clientSocketId = removeClientFromRestaurant(socket.id);
+				console.log(clientSocketId);
+				sendClientConfirmation(sockets, clientSocketId);
+			}
+		}catch(err){
+			console.log(err);
 		}
 
 		delete idRestaurantIpAddress[socket.id];
@@ -92,7 +96,7 @@ http.listen(3000,function(){
 
 function sendingMessage(data, sockets, socketId){
 	sockets.forEach(function(sock){
-		if(sock.id === socket.id){
+		if(sock.id === socketId){
 			sock.emit('message',{message:data});
 			return;
 		}
@@ -100,11 +104,11 @@ function sendingMessage(data, sockets, socketId){
 }
 
 
-function isRestaurant(socketId){
+function isSocketRestaurant(socketId){
 	var result = false;
 
-	var restaurant =idRestaurantIpAddress[socket.id];
-	var client = idClientIpAddress[socket.id];
+	var restaurant = idRestaurantIpAddress[socketId];
+	var client = idClientIpAddress[socketId];
 
 	if(typeof client !== 'undefined')
 		result = false;
