@@ -117,7 +117,7 @@ public class ChatActivity extends Activity{
     }
 
     private void sendMessage(){
-        if(!ipAddress.isEmpty()){
+        if(!ipAddress.equals("")){
             Log.d("ANDROID_ID>>>>", Util.getDeviceId(this));
             String message = mInputMessageView.getText().toString().trim();
             if(message != "") {
@@ -214,7 +214,6 @@ public class ChatActivity extends Activity{
                 if(ipRestaurant.equals(logoutRestaurantIp)){
                     Log.d("adentro", "adentrp>>>>");
                     Snackbar snack = Util.createSnackbar(rVMessagesView, getResources().getString(R.string.restaurant_logout));
-
                     ipRestaurant = "";
                     snack.show();
                 }
