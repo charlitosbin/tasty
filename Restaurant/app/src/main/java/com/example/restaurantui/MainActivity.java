@@ -33,6 +33,8 @@ public class MainActivity extends Activity {
     private EditText mInputMessageView;
     private ImageButton msendButton;
 
+
+    //TODO: CLEAR MESSAGES WHEN CLIENT LOGOUTS
     private String ipAddress = "http://192.168.1.67:3000";
     //private String ipAddress = "http://192.168.0.107:3000";
     private String clientIpAddress = "";
@@ -167,5 +169,4 @@ public class MainActivity extends Activity {
             }
         }
     };
-
 }

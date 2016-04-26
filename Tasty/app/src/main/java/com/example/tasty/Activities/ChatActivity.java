@@ -3,12 +3,15 @@ package com.example.tasty.Activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.tasty.Utils.Encryption;
 import com.example.tasty.Utils.Util;
@@ -35,6 +38,11 @@ public class ChatActivity extends Activity{
     private EditText mInputMessageView;
     private ImageButton msendButton;
 
+    private LinearLayout llMain;
+
+
+    //TODO: CLEAR MESSAGES WHEN RESTAURANT LOGOUTS,
+    // AND REDIRECT CLIENT TO MAIN PAGE
     private Encryption encryption;
     //22
    private String ipAddress = "http://192.168.1.67:3000";
@@ -73,6 +81,7 @@ public class ChatActivity extends Activity{
                 + "client:" + Util.getDeviceId(this));
         serverSocket.on(getResources().getString(R.string.server_message), handleIncomingMessages);
         serverSocket.on("restaurant", handleIncomingRestaurants);
+        serverSocket.on("restaurant_logout", handleIncomingLogouts);
 
         setVariables();
         addEventHandlers();
@@ -96,6 +105,7 @@ public class ChatActivity extends Activity{
 
     private void setVariables(){
 
+        llMain = (LinearLayout)findViewById(R.id.mainLL);
         mInputMessageView = (EditText)findViewById(R.id.message_input);
         msendButton = (ImageButton) findViewById(R.id.send_button);
 
@@ -107,27 +117,32 @@ public class ChatActivity extends Activity{
     }
 
     private void sendMessage(){
-        Log.d("ANDROID_ID>>>>", Util.getDeviceId(this));
-        String message = mInputMessageView.getText().toString().trim();
-        if(message != "") {
-            message = nickname+": "+message;
-            if(encryption != null){
-                byte[] encrypted = new byte[0];
-                try {
-                    encrypted = encryption.encrypt(message.getBytes("UTF-8"));
-                    byte[] decrypted = encryption.decrypt(encrypted);
-                    Log.d("tag>>", new String(decrypted, "UTF-8"));
-                } catch (Exception e) {
-                    e.printStackTrace();
+        if(!ipAddress.isEmpty()){
+            Log.d("ANDROID_ID>>>>", Util.getDeviceId(this));
+            String message = mInputMessageView.getText().toString().trim();
+            if(message != "") {
+                message = nickname + ": " + message;
+                if (encryption != null) {
+                    byte[] encrypted = new byte[0];
+                    try {
+                        encrypted = encryption.encrypt(message.getBytes("UTF-8"));
+                        byte[] decrypted = encryption.decrypt(encrypted);
+                        Log.d("tag>>", new String(decrypted, "UTF-8"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-            mInputMessageView.setText("");
-            addMessage(message, false);
-            //if(restaurantSocket != null){
-              //restaurantSocket.emit("message",message);
-           // }
-            serverSocket.emit(getResources().getString(R.string.server_message), message);
+                mInputMessageView.setText("");
+                addMessage(message, false);
+                //if(restaurantSocket != null){
+                //restaurantSocket.emit("message",message);
+                // }
+                serverSocket.emit(getResources().getString(R.string.server_message), message);
+            }
+        }else{
+            Snackbar snack = Util.createSnackbar(rVMessagesView, getResources().getString(R.string.restaurant_logout));
+            snack.show();
         }
     }
 
@@ -180,6 +195,28 @@ public class ChatActivity extends Activity{
                  //   }catch (URISyntaxException e){
                    //     throw  new RuntimeException(e);
                     //}
+                }
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+        }
+    };
+
+    private Emitter.Listener handleIncomingLogouts = new Emitter.Listener(){
+        @Override
+        public void call(final Object... args){
+            JSONObject data = (JSONObject) args[0];
+            try{
+                String logoutRestaurantIp = data.getString("restaurant_logout").toString();
+                logoutRestaurantIp = "http://" + logoutRestaurantIp + ":3000";
+                Log.d("logoutip", logoutRestaurantIp);
+                Log.d("ipaddress", ipRestaurant);
+                if(ipRestaurant.equals(logoutRestaurantIp)){
+                    Log.d("adentro", "adentrp>>>>");
+                    Snackbar snack = Util.createSnackbar(rVMessagesView, getResources().getString(R.string.restaurant_logout));
+
+                    ipRestaurant = "";
+                    snack.show();
                 }
             }catch (JSONException e){
                 e.printStackTrace();

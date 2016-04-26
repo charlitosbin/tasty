@@ -26,6 +26,7 @@
     <string name="location_service_error">Necesitas activar los servicios de localizacion.</string>
     <string name="query_null_error">Necesitas agregar un parametro de busqueda.</string>
     <string name="no_restaurant_selected">Necesitas seleccionar un restaurante para chatear con el.</string>
+    <string name="restaurant_logout">Lo sentimos, tu restaurante se ha desconectado, regrese para escoger otro.</string>
 
     <string name="server_url">http://192.168.1.67:3000</string>
     <string name="server_message">message</string>

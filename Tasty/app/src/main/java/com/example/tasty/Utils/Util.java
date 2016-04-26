@@ -1,12 +1,15 @@
 package com.example.tasty.Utils;
 
 
+import android.app.Activity;
 import android.location.Geocoder;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.content.Context;
 import android.location.Address;
+import android.widget.Toast;
 
 import com.example.tasty.Models.RestaurantModel;
 import com.google.android.gms.maps.model.LatLng;
@@ -23,10 +26,15 @@ public final class Util {
         System.out.println("hola");
     }
 
-    public static Snackbar createSnackbar(LinearLayout ll, String title){
+    public static Snackbar createSnackbar(View ll, String title){
         Snackbar snack = Snackbar.make(ll,title,Snackbar.LENGTH_LONG);
 
         return snack;
+    }
+
+    public static Toast createToast(Context context, String message){
+        Toast toast = Toast.makeText(context,message, Toast.LENGTH_LONG);
+        return toast;
     }
 
     public static LatLng getCoordFromAddress(Context context, String address){
