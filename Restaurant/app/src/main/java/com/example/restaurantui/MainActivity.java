@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.restaurantui.Components.MessageAdapter;
+import com.example.restaurantui.Utils.Encryption;
 import com.example.restaurantui.Utils.Util;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
@@ -36,6 +37,8 @@ public class MainActivity extends Activity {
     private RecyclerView.LayoutManager mLayoutManager;
     private EditText mInputMessageView;
     private ImageButton msendButton;
+
+    private Encryption encryption;
 
 
     //TODO: CLEAR MESSAGES WHEN CLIENT LOGOUTS
@@ -70,6 +73,12 @@ public class MainActivity extends Activity {
 
         setVariables();
         addEventHandlers();
+
+        try{
+            encryption = new Encryption(new byte[16]);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -105,14 +114,18 @@ public class MainActivity extends Activity {
         String message = mInputMessageView.getText().toString().trim();
         if(message != "") {
             message = nickname + ": " + message;
-
+            byte[] encrypted = new byte[0];
+            if(encryption != null){
+                try{
+                    encrypted = encryption.encrypt(message.getBytes("UTF-8"));
+                    Log.d("tag>>>", new String(encrypted, "UTF-8"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
             mInputMessageView.setText("");
             addMessage(message, false);
-
-            //if(clientSocket != null){
-            //    clientSocket.emit("message", message);
-           // }
-            serverSocket.emit("message", message);
+            serverSocket.emit("message", encrypted);
         }
     }
 
@@ -130,15 +143,22 @@ public class MainActivity extends Activity {
         @Override
         public void call(final Object... args){
             JSONObject data = (JSONObject)args[0];
-            final String message;
+            final byte[] decrypted;
             try{
-                message = data.getString("message").toString();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        addMessage(message, true);
-                    }
-                });
+                byte[] d = ((byte[]) data.get("message"));
+                try {
+                    decrypted = encryption.decrypt(d);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                addMessage(new String(decrypted, "UTF-8"), true);
+                            }catch (Exception e){}
+                        }
+                    });
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }catch (JSONException e){
                 e.printStackTrace();
             }

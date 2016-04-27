@@ -39,9 +39,6 @@ public class ChatActivity extends Activity{
 
     private LinearLayout llMain;
 
-
-    //TODO: CLEAR MESSAGES WHEN RESTAURANT LOGOUTS,
-    // AND REDIRECT CLIENT TO MAIN PAGE
     private Encryption encryption;
     //22
    private String ipAddress = "http://192.168.1.67:3000";
@@ -84,7 +81,6 @@ public class ChatActivity extends Activity{
 
         setVariables();
         addEventHandlers();
-
     }
 
     @Override
@@ -121,23 +117,18 @@ public class ChatActivity extends Activity{
             String message = mInputMessageView.getText().toString().trim();
             if(message != "") {
                 message = nickname + ": " + message;
+                byte[] encrypted = new byte[0];
                 if (encryption != null) {
-                    byte[] encrypted = new byte[0];
                     try {
                         encrypted = encryption.encrypt(message.getBytes("UTF-8"));
-                        byte[] decrypted = encryption.decrypt(encrypted);
-                        Log.d("tag>>", new String(decrypted, "UTF-8"));
+                        Log.d("tag>>", new String(encrypted, "UTF-8"));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-
                 mInputMessageView.setText("");
                 addMessage(message, false);
-                //if(restaurantSocket != null){
-                //restaurantSocket.emit("message",message);
-                // }
-                serverSocket.emit(getResources().getString(R.string.server_message), message);
+                serverSocket.emit(getResources().getString(R.string.server_message), encrypted);
             }
         }else{
             Snackbar snack = Util.createSnackbar(rVMessagesView, getResources().getString(R.string.restaurant_logout));
@@ -161,15 +152,23 @@ public class ChatActivity extends Activity{
         @Override
         public void call(final Object... args){
             JSONObject data = (JSONObject)args[0];
-            final String message;
+            final byte[] decrypted;
             try{
-                message = data.getString("message").toString();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        addMessage(message, true);
-                    }
-                });
+                byte [] d  = ((byte[])data.get("message"));
+                try{
+                    decrypted = encryption.decrypt(d);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try{
+                            addMessage(new String(decrypted, "UTF-8"), true);
+                            }catch (Exception e){}
+                        }
+                    });
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
             }catch (JSONException e){
                 e.printStackTrace();
             }
@@ -185,15 +184,6 @@ public class ChatActivity extends Activity{
                 if(ipRestaurant != null || ipRestaurant != "") {
                     ipRestaurant = "http://" + ipRestaurant + ":3000";
                     Log.d("restaurantIp>>>", ipRestaurant);
-                   // try{
-                     //   restaurantSocket = IO.socket(ipRestaurant);
-                       // restaurantSocket.connect();
-                       // restaurantSocket.on("message", handleIncomingMessages);
-
-                        //restaurantSocket.emit("message","hola amigo");
-                 //   }catch (URISyntaxException e){
-                   //     throw  new RuntimeException(e);
-                    //}
                 }
             }catch (JSONException e){
                 e.printStackTrace();
