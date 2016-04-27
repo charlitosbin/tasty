@@ -67,13 +67,10 @@ io.on('connection',function(socket){
 		try{
 			if(!isRestaurant){
 				console.log("client");
-				console.log("hola " + client.clientSocketId);
-				var restaurantSocketId = removeRestaurantFromClient(client.clientSocketId);
-				console.log(restaurantSocketId);
-				sendRestaurantConfirmation(sockets, restaurantSocketId);
-
+				var restaurantSocketIdAndIpAddress = removeRestaurantFromClient(client.clientSocketId);
+				console.log(restaurantSocketIdAndIpAddress.clientIpAddress);
+				sendRestaurantConfirmation(sockets, restaurantSocketIdAndIpAddress.restaurantSocketId, restaurantSocketIdAndIpAddress.clientIpAddress);
 			}
-
 			if(isRestaurant){
 				console.log('restaurant');
 				var clientSocketAndIpAddress = removeClientFromRestaurant(socket.id);
@@ -120,12 +117,12 @@ function isSocketRestaurant(socketId){
 
 
 
-function sendRestaurantConfirmation(sockets, restaurantSocketId){
+function sendRestaurantConfirmation(sockets, restaurantSocketId, clientIpAddress){
 	console.log("entro a confirmacion");
 	sockets.forEach(function(sock){
 			if(sock.id == restaurantSocketId){
 				console.log("confirmacion>>>" +  restaurantSocketId);
-				sock.emit('client_logout',{"client_logout" : getIpAddressFromSocket(sock)});
+				sock.emit('client_logout',{"client_logout" : clientIpAddress});
 			}
 		})
 }
@@ -172,15 +169,18 @@ function addObjectToRestaurantIpAddress(data,socket){
 function removeRestaurantFromClient(clientSocketId){
 	console.log("clientSocketId >>>> " + clientSocketId);
 	var client = idClientIpAddress[clientSocketId];
-
 	var restaurant = idRestaurantIpAddress[client.restaurantSocketId];
-	console.log("rs>>> " + restaurant.restaurantSocketId);
+	var clientIpAddress = client.ipAddress;
+	var restaurantSocketId = restaurant.restaurantSocketId;
+
+	console.log("rs>>> " + restaurantSocketId);
 	restaurant.clientSocketId = "";
 	restaurant.ipClientAddress = "";
 	restaurant.restaurantName = "";
 	restaurant.isFree = true;
 
-	return restaurant.restaurantSocketId;
+	console.log("ip>>>" + clientIpAddress);
+	return {"restaurantSocketId" : restaurantSocketId, "clientIpAddress" : clientIpAddress};
 
 }
 
@@ -191,7 +191,6 @@ function removeClientFromRestaurant(restaurantSocketId){
 	var restaurantIpAddress = restaurant.ipAddress;
 
 	var client = idClientIpAddress[restaurant.clientSocketId];
-
 
 	client.restaurantSocketId = "";
 	client.restaurantName = "";

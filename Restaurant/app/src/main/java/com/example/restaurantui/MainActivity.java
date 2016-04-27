@@ -3,10 +3,13 @@ package com.example.restaurantui;
 import android.os.Bundle;
 
 import android.app.Activity;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -24,6 +27,7 @@ import com.example.restaurantui.Models.Message;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class MainActivity extends Activity {
 
@@ -58,11 +62,11 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         serverSocket.connect();
         serverSocket.emit("init_restaurant", Util.getDeviceId(this));
         serverSocket.on("client", handleIncomingClients);
         serverSocket.on("message", handleIncomingMessages);
+        serverSocket.on("client_logout", handleIncomingLogouts);
 
         setVariables();
         addEventHandlers();
@@ -168,5 +172,34 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
             }
         }
+    };
+
+    private Emitter.Listener handleIncomingLogouts = new Emitter.Listener(){
+      @Override
+    public void call(final Object... args){
+          JSONObject data = (JSONObject)args[0];
+          try{
+              String logoutClientIp = data.getString("client_logout").toString();
+              logoutClientIp = "http://" + logoutClientIp + ":3000";
+              Log.d("logoutip", logoutClientIp);
+              Log.d("ipaddress", clientIpAddress);
+              if(clientIpAddress.equals(logoutClientIp)){
+                  Log.d("adentro", "adentro>>>");
+                  Snackbar snack = Util.createSnackbar(rVMessagesView, "Lo sentimos, tu cliente se ha desconectado.");
+                  clientIpAddress = "";
+                  snack.show();
+                  runOnUiThread(new Runnable() {
+                      @Override
+                      public void run() {
+                          mMessages.clear();
+                          mAdapter.notifyDataSetChanged();
+                      }
+                  });
+              }
+
+          }catch (JSONException e){
+              e.printStackTrace();
+          }
+      }
     };
 }
