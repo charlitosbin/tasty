@@ -178,15 +178,6 @@ public class MainActivity extends Activity {
                     clientIpAddress = "http://"+ clientIpAddress +":3000";
                     Log.d("restaurantIp>>>", clientIpAddress);
                     Log.d("restaurantName>>>>>>", nickname);
-                   // try{
-                   //     clientSocket = IO.socket(clientIpAddress);
-                   //     clientSocket.connect();
-                   //     clientSocket.on("message", handleIncomingMessages);
-
-                       // clientSocket.emit("message", "hola compadre");
-                    //}catch (URISyntaxException e){
-                    //    throw  new RuntimeException(e);
-                   // }
                 }
             }catch (JSONException e){
                 e.printStackTrace();

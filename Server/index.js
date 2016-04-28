@@ -210,6 +210,7 @@ function addRestaurantToClient(clientSocket){
 				restaurant.clientSocketId = clientSocket.id;
 				restaurant.ipClientAddress = getIpAddressFromSocket(clientSocket);
 				client.restaurantIpAddress = restaurant.ipAddress;
+				client.isFree = false;
 
 				return restaurant;
 			}
@@ -226,6 +227,7 @@ function addClientToRestaurant(clientSocketId, restaurant){
 	restaurant.clientSocketId = clientSocketId;
 	restaurant.ipClientAddress = client.ipAddress;
 	restaurant.restaurantName = client.restaurantName;
+	restaurant.isFree = false;
 	
 	return client;
 }
