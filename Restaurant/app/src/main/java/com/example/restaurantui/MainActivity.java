@@ -42,7 +42,8 @@ public class MainActivity extends Activity {
 
 
     //TODO: CLEAR MESSAGES WHEN CLIENT LOGOUTS
-    private String ipAddress = "http://192.168.1.67:3000";
+    //private String ipAddress = "http://192.168.1.67:3000";
+    private String ipAddress = "http://192.168.2.8:3000";
     //private String ipAddress = "http://192.168.0.107:3000";
     private String clientIpAddress = "";
 

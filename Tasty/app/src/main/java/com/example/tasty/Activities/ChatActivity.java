@@ -41,7 +41,9 @@ public class ChatActivity extends Activity{
 
     private Encryption encryption;
     //22
-   private String ipAddress = "http://192.168.1.67:3000";
+    //private String ipAddress = "http://192.168.1.67:3000";
+    private String ipAddress = "http://192.168.2.8:3000";
+
     //private String ipAddress = "http://192.168.0.107:3000";
     private String ipRestaurant = "";
 
